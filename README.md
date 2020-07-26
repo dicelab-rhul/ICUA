@@ -28,7 +28,7 @@ All agents subscribe to `HighlightPerceptions`, the agents are able to decide wh
 
 ### Agent Cycle
 
-The agents follow as simple a `perceive/revise/decide/attempt` cycle.
+The agents follow a simple `perceive/revise/decide/attempt` cycle.
 
 * `perceive` - get perceptions from sensors.
 * `revise` - revise beliefs given new perceptions.
