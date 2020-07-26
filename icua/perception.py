@@ -13,6 +13,7 @@ from icu.event import Event
 from pystarworlds.Event import Perception
 
 class ICUPerception(Perception):
+    """ Perception class for ICU agents, wraps an ICU event. """
 
     def __init__(self, event):
         self.timestamp, self.name, self.src, self.dst, self.data =  event.timestamp, event.name, event.src, event.dst, event.data
@@ -24,29 +25,42 @@ class ICUPerception(Perception):
         return str(self)
 
 class EyeTrackerPerception(ICUPerception):
+    """ Perception corresponding to an ICU eyetracker event. """
     pass
 
 class WarningLightPerception(ICUPerception):
+    """ Perception corresponding to an ICU warning light event. """
     pass
 
 class FuelTankPerception(ICUPerception):
+    """ Perception corresponding to an ICU fuel tank event. """
     pass
 
 class PumpPerception(ICUPerception):
+    """ Perception corresponding to an ICU pump event. """
     pass
 
 class ScalePerception(ICUPerception):
+    """ Perception corresponding to an ICU scale event. """
     pass
 
 class TrackPerception(ICUPerception):
+    """ Perception corresponding to an ICU track event. """
     pass
 
+class HighlightPerception(ICUPerception):
+    """ Perception corresponding to an ICU highlight event. """
+    pass
+
+
+# used to convert ICU event to the appropriate perception type for use in publish/subscribe
 ICU_PERCEPTION_GROUPS = {'WarningLight':WarningLightPerception, 
                          'FuelTank':FuelTankPerception,
                          'Pump':PumpPerception,
                          'Scale':ScalePerception,
-                         'EyeTracker':EyeTrackerPerception,
-                         'Target':TrackPerception}
+                         'Overlay':EyeTrackerPerception,
+                         'Target':TrackPerception,
+                         'Highlight':HighlightPerception}
                          
 def perception(event):
     """
@@ -58,6 +72,7 @@ def perception(event):
     Returns:
         ICUPerception : a perception
     """
+    #print(event)
     group = event.src.split(":")[0]
     if group in ICU_PERCEPTION_GROUPS:
         return ICU_PERCEPTION_GROUPS[group](event)
@@ -66,6 +81,4 @@ def perception(event):
     if group in ICU_PERCEPTION_GROUPS:
         return ICU_PERCEPTION_GROUPS[group](event)
 
-    raise ValueError("Failed to find perception group for event: {0}, avaliable groups are: {1}".format(event, list(ICU_PERCEPTION_GROUPS.keys())))
-
-    #ICU_PERCEPTION_GROUPS
+    raise ValueError("Failed to find perception group for event:\n    {0}\n    avaliable groups are: {1}".format(event, list(ICU_PERCEPTION_GROUPS.keys())))

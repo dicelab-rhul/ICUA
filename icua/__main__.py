@@ -15,9 +15,10 @@ from .agent import FuelMonitor, TrackMonitor, SystemMonitor
 
 
 #agents = [FuelMonitor, TrackMonitor, SystemMonitor]
-agents = [SystemMonitor]
+#agents = [SystemMonitor]
+#agents = [TrackMonitor, SystemMonitor]
 #agents = [TrackMonitor]
-#agents = [FuelMonitor]
+agents = [FuelMonitor]
 
 env = ICUEnvironment(*agents)
 env.simulate()

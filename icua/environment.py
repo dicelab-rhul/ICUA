@@ -42,7 +42,6 @@ class ICUProcess(Process): #connection to the ICU environment via an environment
         self.__icu_sink = ICUEventSink()
         self.__icu_source = ICUEventSource()
         self.__icu_process, self.__icu_memory = icu.start(sinks=[self.__icu_sink], sources=[self.__icu_source])
-        print("MEMORY:", self.__icu_memory.__dict__)
     
     def shared_memory(self):
         return self.__icu_memory
@@ -95,7 +94,7 @@ class ICUEnvironment(Environment):
 
         while self.processes[0].is_alive():
             self.evolve()
-            time.sleep(.5)
+            time.sleep(0.5)
         
         self.processes[0].join()
 
