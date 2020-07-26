@@ -23,8 +23,17 @@ Sensors subscribe to: `ScalePerception`, `WarningLightPerception`, `HighlightPer
 
 Sensors subscribe to: `TrackPerception`, `HighlightPerception`, `EyetrackerPerception`
 
+All agents subscribe to `HighlightPerceptions`, the agents are able to decide whether to overload the user with warnings or not (i.e. they are aware of all of the warnings currently being displayed). For simplicities sake, each agent has a single sensor and a single actuator.
 
-All agents subscribe to `HighlightPerceptions`, the agents are able to decide whether to overload the user with warnings or not (i.e. they are aware of all of the warnings currently being displayed).
+
+### Agent Cycle
+
+The agents follow as simple a `perceive/revise/decide/attempt` cycle.
+
+* `perceive` - get perceptions from sensors.
+* `revise` - revise beliefs given new perceptions.
+* `decide` - decide upon actions using Teleoreactive rules, the agent may decide on 0 or more actions per cycle.
+* `attempt` - attempt actions using actuators.
 
 ---------------------------
 
@@ -49,10 +58,11 @@ Each type of perception mirrors an ICU event (see TODO) for a description of eac
 
 ## Environment
 
+For details on the pystarworlds environment architecture see (TODO).
+
 #### ICU Process 
 
 The ICU process is an environmental process - it periodically emits events which are processed by the physics. In ICUA the ICU process connects to the ICU system, receiving all of the events that ICU generates. These events are emited in the form of perceptions by the process, at which point the physics notfies all of the subcribing sensors. The process makes use of a connection to the ICU system which is also used by the physics to send events (`ICUAction`) to the ICU system. 
-
 
 
 
