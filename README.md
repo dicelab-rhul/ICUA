@@ -1,4 +1,27 @@
+# Install Instructions
+
+```
+git clone https://github.com/dicelab-rhul/pystarworlds.git 
+pip install -e pystarworlds
+
+git clone https://github.com/dicelab-rhul/ICU.git
+pip install -e ICU
+
+git clone https://github.com/dicelab-rhul/ICUA.git
+pip install -e ICUA
+```
+
+```
+python -m icua
+```
+
+
+
+----------------------------
+
+
 # ICUA
+
 ICU Agents built on top of pystarworlds, an overview of the system is presented below.
 
 <img src="docs/icua.png">
