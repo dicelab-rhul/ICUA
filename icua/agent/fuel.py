@@ -105,17 +105,24 @@ class ICUFuelMind(ICUMind):
     def decide(self):
         actions = []
         if not self.is_looking():
-            
             if time.time() - self.last_viewed > self.grace_period:
 
                 # if the main tanks are not at an acceptable level, highlight them!
                 if not self.tank_state['FuelTank:A']['acceptable']:
                     actions.append(self.highlight_action('FuelTank:A'))
+            
                 if not self.tank_state['FuelTank:B']['acceptable']:
                     actions.append(self.highlight_action('FuelTank:B'))
 
                 # TODO other highlighting? 
-                
+        
+            #remove the highlight if its not needed
+            if self.is_highlighted('FuelTank:A') and self.tank_state['FuelTank:A']['acceptable']:
+                actions.append(self.highlight_action('FuelTank:A', value=False))
+            
+            if self.is_highlighted('FuelTank:B') and self.tank_state['FuelTank:B']['acceptable']:
+                actions.append(self.highlight_action('FuelTank:B', value=False))
+
             return actions
         else:   
             return self.clear_highlights() # the user is looking, clear highlights
