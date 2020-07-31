@@ -1,5 +1,41 @@
 # Install Instructions
 
+## Step 1 (Optional): Create a Python virtual environment
+
+#### Option 1: virtualenv
+
+Navigate to a directory where you want the virtual environment to be located.
+
+##### Windows
+
+```
+python3 -m pip install virtualenv
+python3 -m venv icu
+./icu/Scripts/activate
+```
+
+##### Linux / MacOS
+
+```
+python3 -m pip install virtualenv
+python3 -m venv icu
+source icu/bin/activate
+```
+
+The virtual environment can be deactivated with `deactivate`.
+
+#### Option 2: Anaconda
+
+Install [Anaconda](https://docs.anaconda.com/anaconda/install/).
+```
+conda create -n icu python=3.6
+conda activate icu
+```
+
+The virtual environment can be deactivated with `deactivate`.
+
+# Step 2: Install
+
 ```
 git clone https://github.com/dicelab-rhul/pystarworlds.git 
 pip install -e pystarworlds
@@ -11,6 +47,8 @@ git clone https://github.com/dicelab-rhul/ICUA.git
 pip install -e ICUA
 ```
 
+
+# Step 3: Run
 ```
 python -m icua
 ```
