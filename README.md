@@ -4,7 +4,7 @@
 
 #### Option 1: virtualenv
 
-Navigate to a directory where you want to the virtual environment to be located.
+Navigate to a directory where you want the virtual environment to be located.
 
 ##### Windows
 
