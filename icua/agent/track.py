@@ -54,7 +54,7 @@ class ICUTrackMind(ICUMind):
         self.grace_period = 3 # how long should I wait before giving the user some feedback if something is wrong
 
     def revise(self, *perceptions):
-        for perception in perceptions:
+        for perception in sorted(perceptions, key=lambda p: p.name):
 
             assert perception.data.label in ICUTrackMind.LABELS.__dict__ #received an unknown event
             

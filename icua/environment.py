@@ -9,6 +9,9 @@ __author__ = "Benedict Wilkins"
 __email__ = "benrjw@gmail.com"
 __status__ = "Development"
 
+CYCLE_DELAY = 0.01 # seconds WARNING see below
+assert CYCLE_DELAY > 10e-4 #otherwise crash (interprocess communication cant keep up)
+
 import icu
 
 import time
@@ -94,7 +97,7 @@ class ICUEnvironment(Environment):
 
         while self.processes[0].is_alive():
             self.evolve()
-            time.sleep(0.5)
+            time.sleep(CYCLE_DELAY)
         
         self.processes[0].join()
 

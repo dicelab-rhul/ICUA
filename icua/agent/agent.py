@@ -62,7 +62,7 @@ class ICUMind(Mind):
         """
         if not dst.startswith('Highlight'):
             dst = 'Highlight:{0}'.format(dst)
-        print("HIGHLIGHT", dst, value)
+        #print("HIGHLIGHT", dst, value)
         return ICUAction(dst, label=ICUMind.LABELS.highlight, value=value)
 
 
