@@ -1,6 +1,8 @@
-# Install Instructions
+# Integrated Cognitive User assistance + Agents
 
-## Step 1 (Optional): Create a Python virtual environment
+## Install Instructions
+
+### Step 1 (Optional): Create a Python virtual environment
 
 #### Option 1: virtualenv
 
@@ -34,7 +36,7 @@ conda activate icu
 
 The virtual environment can be deactivated with `deactivate`.
 
-# Step 2: Install
+### Step 2: Install
 
 ```
 git clone https://github.com/dicelab-rhul/pystarworlds.git 
@@ -47,8 +49,7 @@ git clone https://github.com/dicelab-rhul/ICUA.git
 pip install -e ICUA
 ```
 
-
-# Step 3: Run
+### Step 3: Run
 ```
 python -m icua
 ```
@@ -57,13 +58,9 @@ python -m icua
 
 ----------------------------
 
-
-# ICUA
-
 ICU Agents built on top of pystarworlds, an overview of the system is presented below.
 
 <img src="docs/icua.png">
-
 
 ## Agents
 
@@ -85,7 +82,6 @@ Sensors subscribe to: `ScalePerception`, `WarningLightPerception`, `HighlightPer
 Sensors subscribe to: `TrackPerception`, `HighlightPerception`, `EyetrackerPerception`
 
 All agents subscribe to `HighlightPerceptions`, the agents are able to decide whether to overload the user with warnings or not (i.e. they are aware of all of the warnings currently being displayed). For simplicities sake, each agent has a single sensor and a single actuator.
-
 
 ### Agent Cycle
 
