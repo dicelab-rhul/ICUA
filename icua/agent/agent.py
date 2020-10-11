@@ -15,9 +15,9 @@ from abc import abstractmethod
 
 from pystarworlds.Agent import Body, Mind, new_actuator, new_sensor
 
-from ..action import ICUAction
+from ..action import ICUAction, InputAction
 
-ICUActuator = new_actuator('ICUActuator', ICUAction) #common across all agents
+ICUActuator = new_actuator('ICUActuator', ICUAction, InputAction) #common across all agents
 
 class ICUMind(Mind):
 

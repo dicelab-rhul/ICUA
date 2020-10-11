@@ -19,6 +19,7 @@ setuptools.setup(name='icua',
       author_email='brjw@hotmail.co.uk',
       license='',
       packages=setuptools.find_packages(),
+      install_requires = [ 'pystarworlds>=0.0.3' ],
       classifiers=[
         "Programming Language :: Python :: 3",
         "Development Status :: 2 - Pre-Alpha",

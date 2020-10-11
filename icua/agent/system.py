@@ -31,7 +31,7 @@ class ICUSystemMind(ICUMind):
         super(ICUSystemMind, self).__init__()
 
         # agents beliefs
-        (x,y), (w,h) = window_properties['system'][0]['position'], window_properties['system'][0]['size']
+        (x,y), (w,h) = window_properties['system']['position'], window_properties['system']['size']
         self.bounding_box = (x,y,x+w,y+h) # location of the system monitoring task (in window coordinates)
         
         self.eye_position = (0,0) #gaze position of the users eyes
@@ -52,7 +52,19 @@ class ICUSystemMind(ICUMind):
         self.scale_threshold = 2 # when should a warning be generated for a scale?
         self.grace_period = 3 # how long should I wait before giving the user some feedback if something is wrong
 
+        self.time = time.time()
+        self.num_percepts = 0
+
+
+
     def revise(self, *perceptions):
+        self.num_percepts += len(perceptions)
+        _time = time.time()
+        if _time - self.time >= 1: #after 1 second
+            print("{0:4f}-{1:4f}: {2}".format(self.time, _time, self.num_percepts))
+            self.time = _time
+            self.num_percepts = 0
+
         for perception in sorted(perceptions, key=lambda p: p.name):
 
             #print(perception)
@@ -60,6 +72,7 @@ class ICUSystemMind(ICUMind):
             
             if perception.data.label == ICUSystemMind.LABELS.gaze: #gaze position
                 self.eye_position = (perception.data.x, perception.data.y)
+                print("GAZE", self.eye_position)
                 if self.is_looking():
                     self.last_viewed = perception.timestamp
 
@@ -93,7 +106,8 @@ class ICUSystemMind(ICUMind):
     def reset_scale(self, perception):
         self.scale_state[perception.dst]['position'] = int(self.scale_state[perception.dst]['size'] / 2)
 
-
+    def others_highlighted(self): # are there currently any highlights?
+        return any(self.highlighted.values())
 
     def decide(self):
         # DEMO -- this requires some discussion!
@@ -103,7 +117,8 @@ class ICUSystemMind(ICUMind):
         #print(self.is_looking())
 
         if not self.is_looking(): #the user is not looking at the task
-            if time.time() - self.last_viewed > self.grace_period: # wait until the grace period is up before displaying any warnings
+
+            if time.time() - self.last_viewed > self.grace_period:# and not self.others_highlighted(): # wait until the grace period is up before displaying any warnings
                 actions = []
                 for scale, state in self.scale_state.items():
                     in_range = abs(state['position'] - (state['size'] // 2)) < self.scale_threshold

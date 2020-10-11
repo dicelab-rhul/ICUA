@@ -72,7 +72,17 @@ def perception(event):
     Returns:
         ICUPerception : a perception
     """
-    #print(event)
+
+    """
+    #TODO remove (testing)
+    if filter_print(event, ["EyeTrackerStub", "Target:0", "Highlight",
+                            "TargetEventGenerator", "ScaleEventGenerator",
+                            "PumpEventGenerator", "WarningLightEventGenerator"], 
+                            [],
+                            ["burn", "transfer"]):
+        print(event)
+    """
+
     group = event.src.split(":")[0]
     if group in ICU_PERCEPTION_GROUPS:
         return ICU_PERCEPTION_GROUPS[group](event)
@@ -82,3 +92,15 @@ def perception(event):
         return ICU_PERCEPTION_GROUPS[group](event)
 
     raise ValueError("Failed to find perception group for event:\n    {0}\n    avaliable groups are: {1}".format(event, list(ICU_PERCEPTION_GROUPS.keys())))
+
+
+def filter_print(event, src, dst, label):
+    result = True
+    for s in src: 
+        result = result and s not in event.src
+    for d in dst:
+        result = result and d not in event.dst
+    for l in label:
+        result = result and l not in event.data.label
+
+    return result

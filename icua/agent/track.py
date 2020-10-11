@@ -31,7 +31,7 @@ class ICUTrackMind(ICUMind):
         super(ICUTrackMind, self).__init__()
 
         # agents beliefs
-        (x,y), (w,h) = window_properties['track'][0]['position'], window_properties['track'][0]['size']
+        (x,y), (w,h) = window_properties['track']['position'], window_properties['track']['size']
         self.bounding_box = (x,y,x+w,y+h) # location of the system monitoring task (in window coordinates)
 
         self.eye_position = (0,0) #gaze position of the users eyes
@@ -59,7 +59,7 @@ class ICUTrackMind(ICUMind):
             assert perception.data.label in ICUTrackMind.LABELS.__dict__ #received an unknown event
             
             if perception.data.label == ICUTrackMind.LABELS.gaze: #gaze position
-                
+                #print("EYE MOVED", self.eye_position)
                 self.eye_position = (perception.data.x, perception.data.y)
                 if self.is_looking():
                     self.last_viewed = perception.timestamp
@@ -75,7 +75,7 @@ class ICUTrackMind(ICUMind):
 
     def decide(self):
         if not self.is_looking():
-            if time.time() - self.last_viewed > self.grace_period:
+            if time.time() - self.last_viewed > self.grace_period:# and not self.others_highlighted():
                 x,y = self.target_state['position']
                 d = (x**2 + y**2)**0.5 
                 
@@ -87,6 +87,9 @@ class ICUTrackMind(ICUMind):
             if self.is_highlighted(): #if the user is looking and the task is highlighted, unhighlight it
                 return self.highlight_action(self.target, value=False)
     
+    def others_highlighted(self): # are there currently any highlights?
+        return any(self.highlighted.values())
+
     def is_highlighted(self): # is a component currently highlighted?
         return self.highlighted[self.target]
 

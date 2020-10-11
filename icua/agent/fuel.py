@@ -66,9 +66,11 @@ class ICUFuelMind(ICUMind):
 
         for perception in sorted(perceptions, key=lambda p: p.name):
             #print(perception)
-            assert perception.data.label in ICUFuelMind.LABELS.__dict__ #received an unknown event
-            
+            if not perception.data.label in ICUFuelMind.LABELS.__dict__: #received an unknown event
+                raise ValueError("Unknown event label: {0}".format(perception.data.label))
+
             if perception.data.label == ICUFuelMind.LABELS.gaze: #gaze position
+                #print("FUEL EYE: ", self.eye_position)
                 self.eye_position = (perception.data.x, perception.data.y)
                 if self.is_looking():
                     self.last_viewed = perception.timestamp
@@ -126,6 +128,10 @@ class ICUFuelMind(ICUMind):
             return actions
         else:   
             return self.clear_highlights() # the user is looking, clear highlights
+
+    def others_highlighted(self): # are there currently any highlights?
+        return any(self.highlighted.values())
+
 
     def clear_highlights(self):
         """ Generate actions for clearing all highlights from the fuel monitoring task (e.g. if the user is now looking)
