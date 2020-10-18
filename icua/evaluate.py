@@ -117,5 +117,4 @@ class EvalTracking:
         self.cma(d) # update moving average distance...
         return d
 
-# - summed time that fuel tanks are out of range time
 # - total time warnings are displayed

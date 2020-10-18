@@ -59,6 +59,7 @@ class ICUProcess(Process): #connection to the ICU environment via an environment
         return events
 
     def sink(self, agent, destination, data): #send an event to the icu system
+        #print(data)
         self.__icu_source.source(agent, destination, **data)
 
     def join(self):

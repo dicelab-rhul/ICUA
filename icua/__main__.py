@@ -30,7 +30,7 @@ args = parser.parse_args()
 #agents = [FuelMonitor, TrackMonitor, SystemMonitor]
 agents = [User]
 agents = [FuelMonitor, TrackMonitor, SystemMonitor, User]
-agents = [Evaluator]
+agents = [User]
 
 
 env = ICUEnvironment(*agents, **args.__dict__)

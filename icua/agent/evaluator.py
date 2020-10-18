@@ -29,7 +29,7 @@ from ..action import ICUAction, InputAction
 ICUEvalSensor = new_sensor('ICUEvalSensor', WarningLightPerception, ScalePerception, TrackPerception, FuelTankPerception, PumpPerception, EyeTrackerPerception, HighlightPerception)
 
 LABELS = SimpleNamespace(switch='switch', slide='slide', click='click', highlight='highlight',
-                             gaze='gaze', saccade='saccade', key='key', move='move', update='update',
+                             gaze='gaze', saccade='saccade', key='key', move='move', change='change',
                               fuel='fuel')
 
 KEY_CODES = {"Up":98, "Down":104, "Left":100, "Right":102}
@@ -106,14 +106,14 @@ class Evaluator(ICUMind):
                     self.eval_tracking_time.stop() # target is back in range, stop the clock
                 
             # WARNING LIGHT EVALUATION
-            elif percept.data.label == LABELS.update: # warning light changed its state
+            elif percept.data.label == LABELS.change: # warning light changed its state
                 if "WarningLight" in percept.src:
                     self.evaluate_warning_light(percept)
                 elif "Scale" in percept.src:
                     self.evaluate_scales(percept)
 
             elif percept.data.label == LABELS.fuel:
-                print(percept)
+                self.evaluate_tanks(percept)
 
 
         self.priority = dict(filter(lambda x: x[1][1], self.highlighted.items()))
@@ -124,8 +124,12 @@ class Evaluator(ICUMind):
             self.eye_to = self.task_positions['window'] #default position, no warnings are being displayed
 
     def evaluate_tanks(self, percept):
-        pass 
-
+        e = self.eval_tanks[percept.src]
+        if not percept.data.acceptable: # start clock, fuel tank not acceptable
+            e.start()
+        else:
+            e.stop()
+        #print(e.score)
 
     def evaluate_scales(self, percept):
         e = self.eval_scales[int(percept.src.split(":")[1])]
