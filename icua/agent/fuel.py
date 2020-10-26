@@ -26,26 +26,24 @@ ICUFuelSensor = new_sensor('ICUFuelSensor', FuelTankPerception, PumpPerception, 
 class ICUFuelMind(ICUMind):
 
     LABELS = SimpleNamespace(highlight='highlight', gaze='gaze', saccade='saccade', click='click',
-                                burn='burn', transfer='transfer', fuel='fuel', repair='repair', fail='fail')
+                                burn='burn', transfer='transfer', change="change", fuel='fuel', repair='repair', fail='fail')
 
     def __init__(self, config, window_properties):
         super(ICUFuelMind, self).__init__()
 
+        self.config = config
         # agents beliefs
         (x,y), (w,h) = window_properties['fuel']['position'], window_properties['fuel']['size']
         self.bounding_box = (x,y,x+w,y+h) # location of the system monitoring task (in window coordinates)
 
         self.eye_position = (0,0) #gaze position of the users eyes
-        # mirrored state of each component of the system monitoring task (updated in revise)
-   
-        self.pump_state = copy.deepcopy({k:v for k,v in config.items() if 'Pump' in k})
-        self.tank_state = copy.deepcopy({k:v for k,v in config.items() if 'Tank' in k})
 
-        self.tank_state['FuelTank:A']['acceptable'] = True
-        self.tank_state['FuelTank:B']['acceptable'] = True
+        self.components = set(list(window_properties['fuel'].keys()))
+        self.components.remove('size')
+        self.components.remove('position')
 
-        print(self.pump_state)
-        print(self.tank_state)
+        self.pump_status = {pump:1 for pump in self.components if "Pump" in pump} # "ready" by default
+        self.tank_status = {tank:self.config[tank]["fuel"] for tank in self.components if "Tank" in tank}
         
         self.highlighted = defaultdict(lambda: False) # is the component highlighted?
         self.viewed = defaultdict(lambda : 0)  # when was the component last viewed?
@@ -56,7 +54,7 @@ class ICUFuelMind(ICUMind):
 
     def __str__(self):
         return pprint.pformat([self.__class__.__name__ + ":" + self.ID, self.eye_position, self.bounding_box, 
-                               self.pump_state, self.tank_state, self.highlighted, self.viewed, self.last_viewed, self.grace_period], indent=2)
+                               self.tank_status, self.tank_status, self.highlighted, self.viewed, self.last_viewed, self.grace_period], indent=2)
 
     def __repr__(self):
         return self.__class__.__name__ + ":" + self.ID
@@ -64,65 +62,49 @@ class ICUFuelMind(ICUMind):
     def revise(self, *perceptions):
         #pprint.pprint(["{0}:{1}:{2}".format(p.ID, p.name, p.timestamp) for p in sorted(perceptions, key=lambda p: p.timestamp)])
 
-        for perception in sorted(perceptions, key=lambda p: p.name):
+        for percept in sorted(perceptions, key=lambda p: p.name):
             #print(perception)
-            if not perception.data.label in ICUFuelMind.LABELS.__dict__: #received an unknown event
-                raise ValueError("Unknown event label: {0}".format(perception.data.label))
+            if not percept.data.label in ICUFuelMind.LABELS.__dict__: #received an unknown event
+                raise ValueError("Unknown event label: {0}".format(percept.data.label))
 
-            if perception.data.label == ICUFuelMind.LABELS.gaze: #gaze position
+            if percept.data.label == ICUFuelMind.LABELS.gaze: #gaze position
                 #print("FUEL EYE: ", self.eye_position)
-                self.eye_position = (perception.data.x, perception.data.y)
+                self.eye_position = (percept.data.x, percept.data.y)
                 if self.is_looking():
-                    self.last_viewed = perception.timestamp
-
-            elif perception.data.label == ICUFuelMind.LABELS.burn:
-                self.tank_state[perception.src]['fuel'] += perception.data.value
+                    self.last_viewed = percept.timestamp
             
-            elif perception.data.label == ICUFuelMind.LABELS.transfer:
-                t1, t2 = perception.src.split(":")[1]
-                #print(perception)
-                self.tank_state["FuelTank:{0}".format(t1)]['fuel'] -= perception.data.value
-                self.tank_state["FuelTank:{0}".format(t2)]['fuel'] += perception.data.value
-                #print(self.tank_state["FuelTank:{0}".format(t1)]['fuel'])
-            
-            elif perception.data.label == ICUFuelMind.LABELS.fuel:
-                self.tank_state[perception.src]['acceptable'] = perception.data.acceptable
+            elif percept.data.label == ICUFuelMind.LABELS.change:
+                # PUMP ATTENTION
+                if "Pump" in percept.src: #update the pumps for use in action decision making...
+                    #print(percept)
+                    self.pump_status[percept.src] = percept.data.value # off, on, fail
 
-            #TODO this might be made easier by emitting an event in ICU directly from the pump whenever its state changes... rather than mirroring the logic here...
-            elif perception.data.label == ICUFuelMind.LABELS.fail:
-                self.pump_state[perception.dst]['state'] = 2
-
-            elif perception.data.label == ICUFuelMind.LABELS.repair:
-                self.pump_state[perception.dst]['state'] = 1
+            # TANK ATTENTION
+            elif percept.data.label == ICUFuelMind.LABELS.fuel:
+                self.tank_status[percept.src] = percept.data.acceptable
                 
-            elif perception.data.label == ICUFuelMind.LABELS.click:
-                state = self.pump_state[perception.dst]['state'] 
-                if state != 2: #pump has not failed
-                    self.pump_state[perception.dst]['state']  = abs(state - 1)                
-                
-            elif perception.data.label == ICUFuelMind.LABELS.highlight: #revise highlights
-                src = perception.src.split(':', 1)[1]
-                self.highlighted[src] = perception.data.value
+            elif percept.data.label == ICUFuelMind.LABELS.highlight: #revise highlights
+                src = percept.src.split(':', 1)[1]
+                self.highlighted[src] = percept.data.value
 
     def decide(self):
         actions = []
+        
         if not self.is_looking():
-            if time.time() - self.last_viewed > self.grace_period:
-
+            if time.time() - self.last_viewed > self.grace_period and not any(self.highlighted.values()):
+                
                 # if the main tanks are not at an acceptable level, highlight them!
-                if not self.tank_state['FuelTank:A']['acceptable']:
+                if not self.tank_status['FuelTank:A']:
                     actions.append(self.highlight_action('FuelTank:A'))
             
-                if not self.tank_state['FuelTank:B']['acceptable']:
+                if not self.tank_status['FuelTank:B']:
                     actions.append(self.highlight_action('FuelTank:B'))
 
-                # TODO other highlighting? 
-        
             #remove the highlight if its not needed
-            if self.is_highlighted('FuelTank:A') and self.tank_state['FuelTank:A']['acceptable']:
+            if self.is_highlighted('FuelTank:A') and self.tank_status['FuelTank:A']:
                 actions.append(self.highlight_action('FuelTank:A', value=False))
             
-            if self.is_highlighted('FuelTank:B') and self.tank_state['FuelTank:B']['acceptable']:
+            if self.is_highlighted('FuelTank:B') and self.tank_status['FuelTank:B']:
                 actions.append(self.highlight_action('FuelTank:B', value=False))
 
             return actions
@@ -132,7 +114,6 @@ class ICUFuelMind(ICUMind):
     def others_highlighted(self): # are there currently any highlights?
         return any(self.highlighted.values())
 
-
     def clear_highlights(self):
         """ Generate actions for clearing all highlights from the fuel monitoring task (e.g. if the user is now looking)
 
@@ -141,7 +122,7 @@ class ICUFuelMind(ICUMind):
         """
         actions = []
         for component, highlighted in self.highlighted.items():
-            if highlighted and (component in self.pump_state or component in self.tank_state): #only unhighlight components that belong to this task
+            if highlighted and (component in self.pump_status or component in self.tank_status): #only unhighlight components that belong to this task
                 actions.append(self.highlight_action(component, value=False)) #add an action to turn off the highlight
         print(actions)
         return actions

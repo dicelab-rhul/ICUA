@@ -52,6 +52,9 @@ class HighlightPerception(ICUPerception):
     """ Perception corresponding to an ICU highlight event. """
     pass
 
+class SystemPerception(ICUPerception):
+    """ Perception for icu system event. """
+    pass 
 
 # used to convert ICU event to the appropriate perception type for use in publish/subscribe
 ICU_PERCEPTION_GROUPS = {'WarningLight':WarningLightPerception, 
@@ -60,7 +63,8 @@ ICU_PERCEPTION_GROUPS = {'WarningLight':WarningLightPerception,
                          'Scale':ScalePerception,
                          'Overlay':EyeTrackerPerception,
                          'Target':TrackPerception,
-                         'Highlight':HighlightPerception}
+                         'Highlight':HighlightPerception,
+                         'System':SystemPerception}
                          
 def perception(event):
     """

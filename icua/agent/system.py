@@ -25,7 +25,7 @@ ICUSystemSensor = new_sensor('ICUSystemSensor', WarningLightPerception, ScalePer
 class ICUSystemMind(ICUMind):
 
     LABELS = SimpleNamespace(switch='switch', slide='slide', click='click', highlight='highlight',
-                             gaze='gaze', saccade='saccade')
+                             gaze='gaze', saccade='saccade', change='change')
 
     def __init__(self, config, window_properties):
         super(ICUSystemMind, self).__init__()
@@ -65,46 +65,31 @@ class ICUSystemMind(ICUMind):
             self.time = _time
             self.num_percepts = 0
 
-        for perception in sorted(perceptions, key=lambda p: p.name):
-
-            #print(perception)
-            assert perception.data.label in ICUSystemMind.LABELS.__dict__ #received an unknown event
+        for percept in sorted(perceptions, key=lambda p: p.name):
+            assert percept.data.label in ICUSystemMind.LABELS.__dict__ #received an unknown event
             
-            if perception.data.label == ICUSystemMind.LABELS.gaze: #gaze position
-                self.eye_position = (perception.data.x, perception.data.y)
-                print("GAZE", self.eye_position)
+            if percept.data.label == ICUSystemMind.LABELS.gaze: #gaze position
+                self.eye_position = (percept.data.x, percept.data.y)
+                #print("GAZE", self.eye_position)
                 if self.is_looking():
-                    self.last_viewed = perception.timestamp
+                    self.last_viewed = percept.timestamp
 
-            elif perception.data.label == ICUSystemMind.LABELS.highlight:
-                #print(perception)
-                src = perception.src.split(':', 1)[1]
-                self.highlighted[src] = perception.data.value
+            elif percept.data.label == ICUSystemMind.LABELS.highlight:
+                src = percept.src.split(':', 1)[1]
+                self.highlighted[src] = percept.data.value
+            elif percept.data.label == ICUSystemMind.LABELS.change:
+                if "WarningLight" in percept.src:
+                    self.revise_warning_light(percept)
+                elif "Scale" in percept.src:
+                    self.revise_scale(percept)
 
-            elif perception.data.label == ICUSystemMind.LABELS.switch: # warning light changed its state
-                self.revise_warning_light(perception)
-
-            elif perception.data.label == ICUSystemMind.LABELS.slide: # scale changed its state
-                self.revise_scale(perception)
-
-            elif perception.data.label == ICUSystemMind.LABELS.click: #something was clicked
-                self.clicked[perception.dst] = perception.timestamp 
-                if perception.dst in self.scale_state:
-                    self.reset_scale(perception)
-                elif perception.dst in self.warning_light_state:
-                    self.revise_warning_light(perception)
-                    
 
     # these rules mirror the icu system logic for updating the component states
-    def revise_warning_light(self, perception):
-        self.warning_light_state[perception.dst]['state'] = int(not self.warning_light_state[perception.dst]['state'])
+    def revise_warning_light(self, percept):
+        self.warning_light_state[percept.src]['state'] = percept.data.value
 
-    def revise_scale(self, perception):
-        self.scale_state[perception.dst]['position'] += perception.data.slide
-        self.scale_state[perception.dst]['position'] = max(0, min(self.scale_state[perception.dst]['size']-1, self.scale_state[perception.dst]['position']))
-
-    def reset_scale(self, perception):
-        self.scale_state[perception.dst]['position'] = int(self.scale_state[perception.dst]['size'] / 2)
+    def revise_scale(self, percept):
+        self.scale_state[percept.src]['position'] = percept.data.value
 
     def others_highlighted(self): # are there currently any highlights?
         return any(self.highlighted.values())
@@ -112,43 +97,48 @@ class ICUSystemMind(ICUMind):
     def decide(self):
         # DEMO -- this requires some discussion!
 
-        #print(self.scale_state)
-        #print(self.eye_position)
-        #print(self.is_looking())
+        actions = []
 
         if not self.is_looking(): #the user is not looking at the task
+            if time.time() - self.last_viewed > self.grace_period: # wait until the grace period is up before displaying any warnings
+                if not any(self.highlighted.values()): # if nothing else is already highlighted
+                    for scale, state in self.scale_state.items():
+                        actions.append(self.highlight_scale(scale, state))
 
-            if time.time() - self.last_viewed > self.grace_period:# and not self.others_highlighted(): # wait until the grace period is up before displaying any warnings
-                actions = []
-                for scale, state in self.scale_state.items():
-                    in_range = abs(state['position'] - (state['size'] // 2)) < self.scale_threshold
-
-                    if not self.is_highlighted(scale) and not in_range: # if the scales are more than the threshold number of slots away then highlight
-                        actions.append(self.highlight_action(scale, value=True)) 
-
-                    elif self.is_highlighted(scale) and in_range:  #unhighlight if highlighted and in the acceptable range
-                            actions.append(self.highlight_action(scale, value=False))
-
-                action = self.decide_warning_light('WarningLight:0', 1)
-                actions.append(action)
-                action = self.decide_warning_light('WarningLight:1', 0)
-                actions.append(action)
-
-                return actions
-
+                    actions.append(self.highlight_warning_light('WarningLight:0', 1))
+                    actions.append(self.highlight_warning_light('WarningLight:1', 0))
+                
         else: #if the user is looking, remove all of the warnings that have been displayed
             return self.clear_highlights()
+        
+        # remove any highlights if needed
+        for scale, state in self.scale_state.items():
+            actions.append(self.unhighlight_scale(scale, state))
+        actions.append(self.unhighlight_warning_light('WarningLight:0', 1))
+        actions.append(self.unhighlight_warning_light('WarningLight:1', 0))
+
+        return actions
     
-    def decide_warning_light(self, warning_light, desired_state):
+    def highlight_scale(self, scale, state):
+        in_range = abs(state['position'] - (state['size'] // 2)) < self.scale_threshold
+        print(in_range)
+        if not self.is_highlighted(scale) and not in_range: # if the scales are more than the threshold number of slots away then highlight
+            return self.highlight_action(scale, value=True)
+
+    def unhighlight_scale(self, scale, state):
+        in_range = abs(state['position'] - (state['size'] // 2)) < self.scale_threshold
+        if self.is_highlighted(scale) and in_range: #unhighlight if highlighted and in the acceptable range
+            return self.highlight_action(scale, value=False)
+
+    def highlight_warning_light(self, warning_light, desired_state):
         if not self.is_highlighted(warning_light): 
             if self.warning_light_state[warning_light]['state'] != desired_state: # the light is is a bad state, highlight it!
                 return self.highlight_action(warning_light, value=True)
-        else:
+
+    def unhighlight_warning_light(self, warning_light, desired_state):
+        if self.is_highlighted(warning_light): 
             if self.warning_light_state[warning_light]['state'] == desired_state: # the light is highlighted but in a good state, unhighlight it!
                 return self.highlight_action(warning_light, value=False)
-
-        return None #do nothing
-
 
     def is_highlighted(self, component): # is a component currently highlighted?
         return self.highlighted[component]

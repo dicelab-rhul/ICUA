@@ -3,7 +3,8 @@
 """
     Created on 24-07-2020 17:45:03
 
-    [Description]
+    A perfect user, looks at incoming events and reacts so as to keep the tasks in an acceptable state. 
+    This user is not constrained by mouse or eye movement speed. 
 """
 __author__ = "Benedict Wilkins"
 __email__ = "benrjw@gmail.com"
@@ -19,9 +20,9 @@ from pprint import pprint
 
 from pystarworlds.Agent import new_sensor
 
-from .agent import ICUMind, ICUBody
-from ..perception import WarningLightPerception, ScalePerception, TrackPerception, FuelTankPerception, PumpPerception, EyeTrackerPerception, HighlightPerception
-from ..action import ICUAction, InputAction
+from ..agent import ICUMind, ICUBody
+from ...perception import WarningLightPerception, ScalePerception, TrackPerception, FuelTankPerception, PumpPerception, EyeTrackerPerception, HighlightPerception
+from ...action import ICUAction, InputAction
 
 ICUUserSensor = new_sensor('ICUUserSensor', WarningLightPerception, ScalePerception, TrackPerception, FuelTankPerception, PumpPerception, EyeTrackerPerception, HighlightPerception)
 
@@ -152,26 +153,18 @@ class ICUUser(ICUMind):
 
 
         # handle fuel
-        
         # 1. always keep secondary tanks full
-        print(self.pump_status)
         aux_pumps = ["Pump:FD", "Pump:EC"]
-        for a_pump in aux_pumps:
+        for a_pump in aux_pumps: 
             if self.pump_status[a_pump] == 1:
                 actions.append(self.click(a_pump))
-
         # 2. fill main tanks (A,B) if not acceptable
         main_pumps = {"FuelTank:A":["Pump:CA", "Pump:EA"], "FuelTank:B":["Pump:FB", "Pump:DB"]}
-        print(self.tank_status)
         for tank, pumps in main_pumps.items():
-            print(tank, self.tank_acceptable(tank))
             if self.tank_acceptable(tank) > 0: # not enough fuel turn on the pumps to the main tank if possible
                 actions.extend([self.click(pump) for pump in pumps if self.pump_status[pump] == 1])
             if self.tank_acceptable(tank) < 0: # too much fuel turn off the pumps to the main tank if possible
                 actions.extend([self.click(pump) for pump in pumps if self.pump_status[pump] == 0])
-
-        
-
         return actions
        
 

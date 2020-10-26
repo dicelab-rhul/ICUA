@@ -26,7 +26,8 @@ class CMA:
     
     @property
     def avg(self):
-        assert self._n > 0
+        if self._n < 0:
+            return float('nan')
         return self._avg
 
     def __call__(self, x, w=1):
@@ -44,7 +45,8 @@ class EvalTime:
     def __init__(self):
         self.t = None
         self.f = False
-        self.score = 0
+        self._score = 0
+        self.start_time = time.time()
 
     def start(self):
         if not self.f:
@@ -53,21 +55,30 @@ class EvalTime:
 
     def stop(self):
         if self.f: 
-            self.score += time.time() - self.t
+            self._score += time.time() - self.t
             self.f = False
+
+    @property
+    def score(self):
+        if self.f: # currently running so add to score
+            return self._score + time.time() - self.t
+        return self._score
 
 class EvalScale:
 
-    def __init__(self, c=5):
+    def __init__(self, x, c=5):
         self.c = c
         self.cma = CMA()
         self.t = time.time()
+        self.px = x
         
     def __call__(self, x):
         t = time.time()
-        d = abs(x - self.c)
+        d = abs(self.px - self.c)
         self.cma(d, t - self.t) #time weighted average
+        print(d, t - self.t)
         self.t = t
+        self.px = x
         return d
 
     @property
@@ -84,7 +95,7 @@ class EvalTracking:
         """
 
         Args:
-            cx (float, optional): center of the trackinhg widget (relative). Defaults to 0.
+            cx (float, optional): center of the tracking widget (relative). Defaults to 0.
             cy (float, optional): center of the tracking widget (relative). Defaults to 0.
             w (float, optional): (total) width of the acceptable region. Defaults to 0.
             h (float, optional): (total) height of the acceptable region. Defaults to 0.

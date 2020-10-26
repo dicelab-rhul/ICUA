@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 """
-    Created on 24-07-2020 17:45:14
+    Created on 25-10-2020 15:27:44
 
     [Description]
 """
@@ -13,10 +13,9 @@ __status__ = "Development"
 import argparse
 import os
 
-from .environment import ICUEnvironment
-from .agent import FuelMonitor, TrackMonitor, SystemMonitor, Evaluator
-from .agent.users import User, PerfectUser, DelayedUser
-
+from icua.environment import ICUEnvironment
+from icua.agent import FuelMonitor, TrackMonitor, SystemMonitor, Evaluator
+from icua.agent.users import User, PerfectUser, DelayedUser
 
 class PathAction(argparse.Action):
 
@@ -29,15 +28,15 @@ parser.add_argument('--config', '-c', metavar='C', action=PathAction, type=str, 
 
 args = parser.parse_args()
 
-#agents = [FuelMonitor, TrackMonitor, SystemMonitor]
-#agents = [User]
-#agents = [User, Evaluator]
-#agents = [FuelMonitor, SystemMonitor, TrackMonitor, DelayedUser, Evaluator]
 agents = [FuelMonitor, SystemMonitor, TrackMonitor, PerfectUser, Evaluator]
 
-#agents = [User]
-#agents = [Evaluator]
-print(args)
-env = ICUEnvironment(*agents, **args.__dict__)
-env.simulate()
+NUM_EXPERIMENTS = 10
 
+for i in range(NUM_EXPERIMENTS):
+    env = ICUEnvironment(*agents, **args.__dict__)
+    env.simulate()
+
+    evaluator = [a for a in env.ambient.agents.values() if hasattr(a.mind, "result")][0].mind
+    with open("results_perfect_user.txt", "a") as f:
+        f.write("# PERFECT USER {0}".format(i))
+        f.write(evaluator.result)
