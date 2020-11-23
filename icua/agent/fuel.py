@@ -112,8 +112,9 @@ class ICUFuelMind(ICUMind):
             return self.clear_highlights() # the user is looking, clear highlights
 
     def others_highlighted(self): # are there currently any highlights?
+        print(self.highlighted.values())
         return any(self.highlighted.values())
-
+    
     def clear_highlights(self):
         """ Generate actions for clearing all highlights from the fuel monitoring task (e.g. if the user is now looking)
 

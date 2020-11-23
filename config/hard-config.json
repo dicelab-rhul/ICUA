@@ -1,0 +1,64 @@
+{
+
+    "WarningLight:0" : {"grace":1, "schedule":[["uniform(0,2000)"]]},
+    "WarningLight:1" : {"grace":1, "schedule":[["uniform(0,2000)"]]},
+
+    "Scale:0" : {"schedule":[["uniform(0,2000)"]], "size" : 11, "position" : 0},
+    "Scale:1" : {"schedule":[["uniform(0,2000)"]], "size" : 11, "position" : 0},
+    "Scale:2" : {"schedule":[["uniform(0,2000)"]], "size" : 11, "position" : 0},
+    "Scale:3" : {"schedule":[["uniform(0,2000)"]], "size" : 11, "position" : 0},
+
+    "Target:0" : { "schedule":[[100]], "step" : 10 , "invert" : false},
+
+    "FuelTank:A" : {"fuel" : 0},
+    "FuelTank:B" : {"fuel" : 0},
+    "FuelTank:C" : {},
+    "FuelTank:D" : {},
+    "FuelTank:E" : {},
+    "FuelTank:F" : {},
+
+    "Pump:AB" : {"schedule":[["uniform(1000,10000)",2000]]},
+    "Pump:BA" : {"schedule":[["uniform(1000,10000)",2000]]},
+    "Pump:FD" : {"schedule":[["uniform(1000,10000)",2000]]},
+    "Pump:EA" : {"schedule":[["uniform(1000,10000)",2000]]},
+    "Pump:CA" : {"schedule":[["uniform(1000,10000)",2000]]},
+    "Pump:EC" : {"schedule":[["uniform(1000,10000)",2000]]},
+    "Pump:DB" : {"schedule":[["uniform(1000,10000)",2000]]},
+    "Pump:FB" : {"schedule":[["uniform(1000,10000)",2000]]},
+
+    "overlay": {
+        "enable":true,
+        "transparent":true,
+        "highlight_colour":"red",
+        "highlight_thickness":4,
+        "outline":true,
+        "arrow":true
+    },
+
+    "input" : {
+        "mouse" : true,
+        "keyboard" : true,
+        "joystick" : false,
+        "eyetracker" : {
+            "enabled" : false,
+            "stub" : false
+        }
+    },
+
+    "task" : {
+        "system" : true,
+        "track" : true,
+        "fuel" : true
+    },
+
+    "shutdown":60000,
+    "background_colour":"blue",
+    "screen_full": false,
+    "screen_height": 700,
+    "screen_width": 800,
+    "screen_x": 0,
+    "screen_y": 0,
+    "screen_resizable":true,
+    "screen_min_size":[400,400],
+    "screen_max_size":[2000,2000]
+}

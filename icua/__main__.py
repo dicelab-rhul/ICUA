@@ -29,11 +29,11 @@ parser.add_argument('--config', '-c', metavar='C', action=PathAction, type=str, 
 
 args = parser.parse_args()
 
-#agents = [FuelMonitor, TrackMonitor, SystemMonitor]
+agents = [FuelMonitor, TrackMonitor, SystemMonitor]
 #agents = [User]
 #agents = [User, Evaluator]
 #agents = [FuelMonitor, SystemMonitor, TrackMonitor, DelayedUser, Evaluator]
-agents = [FuelMonitor, SystemMonitor, TrackMonitor, PerfectUser, Evaluator]
+#agents = [FuelMonitor, SystemMonitor, TrackMonitor, PerfectUser, Evaluator]
 
 #agents = [User]
 #agents = [Evaluator]
