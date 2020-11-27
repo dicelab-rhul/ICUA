@@ -1,0 +1,367 @@
+# AVERAGED OVER 10 RUNS
+# DELAY 0
+# RUN 0
+WarningLight:   0.989 59.67617 58.73187
+Scales:         3.238 3.916 2.438 3.956 2.642
+Tracking:       0.596
+Fuel:           0.084
+Highlight:      0.998
+# RUN 1
+WarningLight:   0.990 59.02337 59.55000
+Scales:         3.632 3.674 3.153 3.785 3.915
+Tracking:       0.376
+Fuel:           0.080
+Highlight:      0.997
+# RUN 2
+WarningLight:   0.995 59.39931 59.81849
+Scales:         3.059 3.803 2.385 4.056 1.990
+Tracking:       0.656
+Fuel:           0.114
+Highlight:      0.998
+# RUN 3
+WarningLight:   0.977 58.31683 58.73527
+Scales:         3.129 3.709 3.668 2.266 2.874
+Tracking:       0.381
+Fuel:           0.103
+Highlight:      0.997
+# RUN 4
+WarningLight:   0.984 59.80574 58.13175
+Scales:         3.079 2.541 4.084 3.132 2.558
+Tracking:       0.560
+Fuel:           0.081
+Highlight:      0.998
+# RUN 5
+WarningLight:   0.976 58.32757 58.43402
+Scales:         2.773 3.266 1.547 3.350 2.930
+Tracking:       0.522
+Fuel:           0.142
+Highlight:      0.997
+# RUN 6
+WarningLight:   0.992 59.23680 59.55450
+Scales:         2.973 2.171 2.208 3.218 4.295
+Tracking:       0.586
+Fuel:           0.103
+Highlight:      0.998
+# RUN 7
+WarningLight:   0.986 59.40550 58.56469
+Scales:         2.821 3.292 3.688 2.231 2.071
+Tracking:       0.436
+Fuel:           0.081
+Highlight:      0.998
+# RUN 8
+WarningLight:   0.989 58.80212 59.54378
+Scales:         2.854 2.479 2.673 2.843 3.422
+Tracking:       0.334
+Fuel:           0.125
+Highlight:      0.997
+# RUN 9
+WarningLight:   0.985 58.56890 59.31238
+Scales:         2.402 1.660 1.738 2.998 3.214
+Tracking:       0.654
+Fuel:           0.105
+Highlight:      0.998
+# DELAY 0.1
+# RUN 0
+WarningLight:   0.993 59.30068 59.51169
+Scales:         3.088 3.258 3.718 2.883 2.493
+Tracking:       0.309
+Fuel:           0.082
+Highlight:      0.998
+# RUN 1
+WarningLight:   0.986 59.06867 58.86004
+Scales:         2.865 2.827 2.586 2.620 3.428
+Tracking:       0.500
+Fuel:           0.081
+Highlight:      0.998
+# RUN 2
+WarningLight:   0.986 58.46024 59.50930
+Scales:         3.071 3.188 2.935 3.134 3.025
+Tracking:       0.396
+Fuel:           0.114
+Highlight:      0.998
+# RUN 3
+WarningLight:   0.982 59.63390 57.87000
+Scales:         2.919 2.794 2.978 2.981 2.921
+Tracking:       0.657
+Fuel:           0.081
+Highlight:      0.998
+# RUN 4
+WarningLight:   0.970 57.85560 58.27856
+Scales:         3.036 2.277 3.943 2.740 3.185
+Tracking:       0.486
+Fuel:           0.130
+Highlight:      0.998
+# RUN 5
+WarningLight:   0.975 58.83305 57.98083
+Scales:         3.364 2.212 3.157 3.922 4.164
+Tracking:       0.272
+Fuel:           0.081
+Highlight:      0.997
+# RUN 6
+WarningLight:   0.982 58.75004 58.85622
+Scales:         3.056 2.715 3.007 3.291 3.211
+Tracking:       0.577
+Fuel:           0.081
+Highlight:      0.998
+# RUN 7
+WarningLight:   0.987 59.62722 58.47274
+Scales:         2.663 3.077 2.911 2.131 2.534
+Tracking:       0.250
+Fuel:           0.126
+Highlight:      0.997
+# RUN 8
+WarningLight:   0.978 58.27133 58.79156
+Scales:         3.243 2.884 4.341 2.802 2.944
+Tracking:       0.477
+Fuel:           0.150
+Highlight:      0.998
+# RUN 9
+WarningLight:   0.980 59.00086 58.25738
+Scales:         3.266 3.293 3.454 3.788 2.527
+Tracking:       0.615
+Fuel:           0.082
+Highlight:      0.998
+# DELAY 0.5
+# RUN 0
+WarningLight:   0.987 58.38184 59.73156
+Scales:         2.894 4.114 2.040 2.729 2.694
+Tracking:       0.490
+Fuel:           0.137
+Highlight:      0.997
+# RUN 1
+WarningLight:   0.987 59.72466 58.37701
+Scales:         3.461 2.983 3.900 3.926 3.036
+Tracking:       0.521
+Fuel:           0.137
+Highlight:      0.997
+# RUN 2
+WarningLight:   0.984 57.99025 59.65581
+Scales:         3.793 4.051 3.845 3.507 3.771
+Tracking:       0.323
+Fuel:           0.181
+Highlight:      0.998
+# RUN 3
+WarningLight:   0.969 58.11406 57.90666
+Scales:         3.269 3.678 2.127 3.698 3.574
+Tracking:       0.512
+Fuel:           0.099
+Highlight:      0.998
+# RUN 4
+WarningLight:   0.979 59.42589 57.76767
+Scales:         2.595 1.823 3.123 3.084 2.353
+Tracking:       0.512
+Fuel:           0.136
+Highlight:      0.998
+# RUN 5
+WarningLight:   0.990 58.81899 59.64079
+Scales:         3.664 3.459 4.425 3.658 3.113
+Tracking:       0.615
+Fuel:           0.129
+Highlight:      0.998
+# RUN 6
+WarningLight:   0.976 58.77731 57.95687
+Scales:         3.049 3.227 4.084 2.685 2.199
+Tracking:       0.367
+Fuel:           0.146
+Highlight:      0.997
+# RUN 7
+WarningLight:   0.979 58.01768 59.04692
+Scales:         3.096 2.914 3.097 3.089 3.283
+Tracking:       0.338
+Fuel:           0.162
+Highlight:      0.997
+# RUN 8
+WarningLight:   0.974 57.81353 58.65001
+Scales:         3.299 3.443 3.746 2.622 3.383
+Tracking:       0.583
+Fuel:           0.319
+Highlight:      0.998
+# RUN 9
+WarningLight:   0.984 58.10036 59.76290
+Scales:         2.837 3.729 2.915 2.268 2.436
+Tracking:       0.668
+Fuel:           0.111
+Highlight:      0.998
+# DELAY 1.0
+# RUN 0
+WarningLight:   0.974 58.22819 58.43577
+Scales:         3.013 3.047 3.387 2.649 2.970
+Tracking:       0.506
+Fuel:           0.315
+Highlight:      0.997
+# RUN 1
+WarningLight:   0.983 59.54721 58.08925
+Scales:         3.650 3.739 4.248 3.296 3.316
+Tracking:       0.445
+Fuel:           0.401
+Highlight:      0.998
+# RUN 2
+WarningLight:   0.972 57.99226 58.40387
+Scales:         2.692 3.110 2.473 2.477 2.707
+Tracking:       0.492
+Fuel:           0.372
+Highlight:      0.997
+# RUN 3
+WarningLight:   0.979 58.12171 58.95225
+Scales:         3.352 2.483 4.054 4.102 2.770
+Tracking:       0.734
+Fuel:           0.202
+Highlight:      0.998
+# RUN 4
+WarningLight:   0.986 58.59698 59.42821
+Scales:         2.716 2.284 2.144 3.374 3.060
+Tracking:       0.683
+Fuel:           0.247
+Highlight:      0.998
+# RUN 5
+WarningLight:   0.984 59.80119 58.05464
+Scales:         2.724 3.142 2.618 2.618 2.517
+Tracking:       0.484
+Fuel:           0.227
+Highlight:      0.997
+# RUN 6
+WarningLight:   0.972 57.83255 58.34380
+Scales:         2.941 3.746 2.032 3.241 2.744
+Tracking:       0.451
+Fuel:           0.163
+Highlight:      0.997
+# RUN 7
+WarningLight:   0.975 58.45197 58.14265
+Scales:         2.493 2.749 2.068 2.815 2.340
+Tracking:       0.489
+Fuel:           0.142
+Highlight:      0.997
+# RUN 8
+WarningLight:   0.973 58.70461 57.77570
+Scales:         2.478 2.989 2.514 2.806 1.605
+Tracking:       0.677
+Fuel:           0.274
+Highlight:      0.998
+# RUN 9
+WarningLight:   0.987 59.23633 58.71831
+Scales:         2.856 2.242 3.466 2.658 3.058
+Tracking:       0.647
+Fuel:           0.419
+Highlight:      0.998
+# DELAY 2.0
+# RUN 0
+WarningLight:   0.977 58.69219 58.18303
+Scales:         3.026 2.725 3.490 2.470 3.419
+Tracking:       0.378
+Fuel:           0.705
+Highlight:      0.998
+# RUN 1
+WarningLight:   0.985 59.22835 58.71743
+Scales:         3.284 2.951 3.113 3.982 3.091
+Tracking:       0.514
+Fuel:           0.685
+Highlight:      0.998
+# RUN 2
+WarningLight:   0.984 58.72093 58.82442
+Scales:         3.324 3.132 2.803 3.563 3.796
+Tracking:       0.386
+Fuel:           0.519
+Highlight:      0.997
+# RUN 3
+WarningLight:   0.979 58.49481 58.49479
+Scales:         2.685 1.899 3.114 3.076 2.652
+Tracking:       0.336
+Fuel:           0.530
+Highlight:      0.997
+# RUN 4
+WarningLight:   0.980 58.36889 58.88451
+Scales:         3.462 2.825 3.973 3.385 3.664
+Tracking:       0.465
+Fuel:           0.756
+Highlight:      0.998
+# RUN 5
+WarningLight:   0.980 58.65902 58.55635
+Scales:         3.133 3.334 2.860 3.185 3.155
+Tracking:       0.346
+Fuel:           0.514
+Highlight:      0.997
+# RUN 6
+WarningLight:   0.971 58.05032 57.84335
+Scales:         3.212 3.976 3.369 2.522 2.982
+Tracking:       0.752
+Fuel:           0.541
+Highlight:      0.998
+# RUN 7
+WarningLight:   0.997 59.75114 59.54277
+Scales:         2.908 2.822 3.493 2.282 3.036
+Tracking:       0.358
+Fuel:           0.848
+Highlight:      0.997
+# RUN 8
+WarningLight:   0.979 58.64433 58.64442
+Scales:         2.763 3.450 3.127 2.400 2.073
+Tracking:       0.379
+Fuel:           0.736
+Highlight:      0.998
+# RUN 9
+WarningLight:   0.993 59.71740 59.09659
+Scales:         3.189 4.268 3.621 2.038 2.828
+Tracking:       0.286
+Fuel:           0.583
+Highlight:      0.997
+# DELAY 4.0
+# RUN 0
+WarningLight:   0.990 58.96550 59.37527
+Scales:         2.766 3.556 3.380 2.540 1.588
+Tracking:       0.541
+Fuel:           0.657
+Highlight:      0.997
+# RUN 1
+WarningLight:   0.984 58.24276 59.69165
+Scales:         2.793 2.245 3.150 2.940 2.838
+Tracking:       0.539
+Fuel:           0.762
+Highlight:      0.997
+# RUN 2
+WarningLight:   0.971 58.37585 57.75724
+Scales:         2.936 3.672 2.935 2.740 2.398
+Tracking:       0.677
+Fuel:           0.782
+Highlight:      0.997
+# RUN 3
+WarningLight:   0.997 59.73504 59.52907
+Scales:         2.893 2.867 2.832 3.666 2.208
+Tracking:       0.438
+Fuel:           0.616
+Highlight:      0.998
+# RUN 4
+WarningLight:   0.978 58.99229 58.06223
+Scales:         2.712 3.414 2.099 2.835 2.499
+Tracking:       0.501
+Fuel:           0.514
+Highlight:      0.998
+# RUN 5
+WarningLight:   0.979 58.88226 58.26376
+Scales:         3.004 3.063 3.448 3.332 2.175
+Tracking:       0.647
+Fuel:           0.891
+Highlight:      0.998
+# RUN 6
+WarningLight:   0.970 57.85100 58.15736
+Scales:         3.172 3.459 3.666 1.778 3.784
+Tracking:       0.559
+Fuel:           0.584
+Highlight:      0.998
+# RUN 7
+WarningLight:   0.971 58.31405 57.90017
+Scales:         3.278 2.961 3.346 3.051 3.754
+Tracking:       0.572
+Fuel:           0.556
+Highlight:      0.998
+# RUN 8
+WarningLight:   0.974 58.46401 58.05019
+Scales:         2.763 3.288 2.321 3.318 2.125
+Tracking:       0.071
+Fuel:           0.774
+Highlight:      0.997
+# RUN 9
+WarningLight:   0.972 57.88243 58.50079
+Scales:         2.616 3.034 2.388 1.741 3.300
+Tracking:       0.565
+Fuel:           0.657
+Highlight:      0.998

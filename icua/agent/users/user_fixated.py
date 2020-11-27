@@ -54,8 +54,6 @@ class ICUUser(ICUMind):
         self.eye_to =  list(self.task_positions['window'][:2])
         self.eye_speed = 0.1 # CHANGE ME
 
-        self.time_to_solve = 0.2 # CHANGE ME
-
         self.highlighted = defaultdict(lambda: (False, 0.)) # is the component highlighted?
 
         # TRACKING
