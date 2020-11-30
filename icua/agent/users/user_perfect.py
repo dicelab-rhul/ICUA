@@ -126,13 +126,7 @@ class ICUUser(ICUMind):
 
 
     def decide(self):
-
-        cx,cy = self.eye_position
-        tx,ty = self.eye_to
-        dx,dy = tx-cx,ty-cy
-
         actions = []
-        actions.append(self.move_eye(dx,dy))
 
         # handle scales
         for scale,data in self.scale_status.items():
@@ -166,15 +160,6 @@ class ICUUser(ICUMind):
             if self.tank_acceptable(tank) < 0: # too much fuel turn off the pumps to the main tank if possible
                 actions.extend([self.click(pump) for pump in pumps if self.pump_status[pump] == 0])
         return actions
-       
-
-    def move_eye_to_task(self, task):
-        print(self.window_properties)
-
-    def move_eye(self, dx, dy):
-        self.eye_position[0] += dx
-        self.eye_position[1] += dy
-        return InputAction('Overlay:0', label=LABELS.gaze, x=self.eye_position[0], y=self.eye_position[1])
 
     def click(self, component):
         #print("CLICK:", component)

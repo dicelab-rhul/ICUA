@@ -1,17 +1,17 @@
 {
 
-    "WarningLight:0" : {"grace":1, "schedule":[["uniform(0,2000)"]]},
-    "WarningLight:1" : {"grace":1, "schedule":[["uniform(0,2000)"]]},
+    "WarningLight:0" : {"grace":1, "schedule":[["uniform(0,5000)"]]},
+    "WarningLight:1" : {"grace":1, "schedule":[["uniform(0,5000)"]]},
 
-    "Scale:0" : {"schedule":[["uniform(0,2000)"]], "size" : 11, "position" : 0},
-    "Scale:1" : {"schedule":[["uniform(0,2000)"]], "size" : 11, "position" : 0},
-    "Scale:2" : {"schedule":[["uniform(0,2000)"]], "size" : 11, "position" : 0},
-    "Scale:3" : {"schedule":[["uniform(0,2000)"]], "size" : 11, "position" : 0},
+    "Scale:0" : {"schedule":[["uniform(1000,5000)"]], "size" : 11, "position" : 0},
+    "Scale:1" : {"schedule":[["uniform(1000,5000)"]], "size" : 11, "position" : 0},
+    "Scale:2" : {"schedule":[["uniform(1000,5000)"]], "size" : 11, "position" : 0},
+    "Scale:3" : {"schedule":[["uniform(1000,5000)"]], "size" : 11, "position" : 0},
 
     "Target:0" : { "schedule":[[100]], "step" : 10 , "invert" : false},
 
-    "FuelTank:A" : {"fuel" : 0},
-    "FuelTank:B" : {"fuel" : 0},
+    "FuelTank:A" : {"fuel":800, "burn_rate":10, "accept_position":0.5, "accept_proportion":0.3},
+    "FuelTank:B" : {"fuel":800, "burn_rate":10, "accept_position":0.5, "accept_proportion":0.3},
     "FuelTank:C" : {},
     "FuelTank:D" : {},
     "FuelTank:E" : {},

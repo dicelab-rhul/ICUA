@@ -37,6 +37,6 @@ for i in range(NUM_EXPERIMENTS):
     env.simulate()
 
     evaluator = [a for a in env.ambient.agents.values() if hasattr(a.mind, "result")][0].mind
-    with open("results_perfect_user.txt", "a") as f:
+    with open("experiment1/results.txt", "a") as f:
         f.write("# PERFECT USER {0}".format(i))
         f.write(evaluator.result)

@@ -32,7 +32,7 @@ NUM_EXPERIMENTS = 10
 
 for fix in ['fuel']:
     
-    for dif in ['normal']:
+    for dif in ['med', 'hard']:
         config = os.path.abspath("config/{0}-config.json".format(dif))
 
         file = "experiment4/results-{0}-{1}.txt".format(fix, dif)

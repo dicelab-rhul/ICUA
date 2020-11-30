@@ -53,9 +53,7 @@ class ICUUser(ICUMind):
         # EYE
         self.eye_position = list(self.task_positions['window'][:2])
         self.eye_to =  list(self.task_positions['window'][:2])
-        self.eye_speed = 0.1 # CHANGE ME
-
-        self.time_to_solve = 0.2 # CHANGE ME
+        self.eye_speed = 200 # CHANGE ME
 
         self.highlighted = defaultdict(lambda: (False, 0.)) # is the component highlighted?
 
@@ -115,10 +113,8 @@ class ICUUser(ICUMind):
                 elif "Tank" in percept.src:
                     self.tank_status[percept.src] = percept.data.value
 
-        print(self.task_positions)
         self.eye_to = self.task_positions[self.fix][:2]
         
-
     def decide(self):
 
         # if there are no other actions to do, move eyes to the next task
@@ -140,9 +136,9 @@ class ICUUser(ICUMind):
     
         if len(self.actions) > 0 and _t - self.last_action_time > self.delay:
             self.last_action_time = _t
-            return self.actions.pop(), self.move_eye(dx,dy)
+            return self.actions.pop(), self.move_eye()
         
-        return self.move_eye(dx, dy)
+        return self.move_eye()
 
 
     def is_looking_at(self, task):
@@ -184,11 +180,30 @@ class ICUUser(ICUMind):
             if self.tank_acceptable(tank) < 0: # too much fuel turn off the pumps to the main tank if possible
                 actions.extend([self.click(pump) for pump in pumps if self.pump_status[pump] == 0])
 
-    def move_eye(self, dx, dy):
-        #print("MOVE EYE", dx, dy)
-        self.eye_position[0] += dx
-        self.eye_position[1] += dy
+    def move_eye(self):
+        cx,cy = self.eye_position
+        tx,ty = self.eye_to
+        #dx,dy = (tx-cx) * self.eye_speed, (ty-cy) * self.eye_speed
+        dx, dy = (tx-cx), (ty-cy)
+        d = np.sqrt(dx**2 + dy**2)
+
+        if d > 0: 
+            dx, dy = dx / d, dy / d
+            dx, dy = dx * self.eye_speed, dy * self.eye_speed
+           
+            ds = np.sqrt(dx**2 + dy**2)
+
+            if ds <= d: 
+                self.eye_position[0] += dx
+                self.eye_position[1] += dy
+            else:
+                self.eye_position[0] = tx
+                self.eye_position[1] = ty
+
+            return InputAction('Overlay:0', label=LABELS.saccade, x=self.eye_position[0], y=self.eye_position[1])
+
         return InputAction('Overlay:0', label=LABELS.gaze, x=self.eye_position[0], y=self.eye_position[1])
+    
 
     def click(self, component):
         #print("CLICK:", component)

@@ -119,7 +119,7 @@ class Evaluator(ICUMind):
             
             # TANK PERFORMANCE
             elif percept.data.label == LABELS.fuel:
-                print(percept)
+                #print(percept)
                 self.evaluate_tanks(percept)
 
     def evaluate_tanks(self, percept):

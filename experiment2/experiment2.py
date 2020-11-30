@@ -30,12 +30,12 @@ args = parser.parse_args()
 
 NUM_EXPERIMENTS = 10
 
-with open("results.txt", "w") as f:
+with open("experiment2/results.txt", "w") as f:
     f.write("# AVERAGED OVER {0} RUNS".format(NUM_EXPERIMENTS))
 
 for delay in [0, 0.1, 0.5, 1., 2., 4.]:
 
-    with open("results.txt", "a") as f:
+    with open("experiment2/results.txt", "a") as f:
         f.write("\n# DELAY {0}".format(delay))
 
     for i in range(NUM_EXPERIMENTS):
@@ -47,6 +47,6 @@ for delay in [0, 0.1, 0.5, 1., 2., 4.]:
 
         evaluator = [a for a in env.ambient.agents.values() if hasattr(a.mind, "result")][0].mind
 
-        with open("results.txt", "a") as f:
+        with open("experiment2/results.txt", "a") as f:
             f.write("\n# RUN {0}".format(i))
             f.write(evaluator.result)

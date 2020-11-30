@@ -52,9 +52,7 @@ class ICUUser(ICUMind):
         # EYE
         self.eye_position = list(self.task_positions['window'][:2])
         self.eye_to =  list(self.task_positions['window'][:2])
-        self.eye_speed = 0.1 # CHANGE ME
-
-        self.time_to_solve = 0.2 # CHANGE ME
+        self.eye_speed = 200 # CHANGE ME
 
         self.highlighted = defaultdict(lambda: (False, 0.)) # is the component highlighted?
 
@@ -122,7 +120,6 @@ class ICUUser(ICUMind):
         else:
             pass #self.eye_to = self.task_positions['window'][:2] #default position, no warnings are being displayed
 
-
     def decide(self):
         #print(self.eye_to, self.eye_position)
         
@@ -130,10 +127,8 @@ class ICUUser(ICUMind):
         #print("SYSTEM:", self.is_looking_at("system"))
         #print("TRACK:", self.is_looking_at("track"))
 
-        cx,cy = self.eye_position
-        tx,ty = self.eye_to
-        dx,dy = (tx-cx) * self.eye_speed, (ty-cy) * self.eye_speed
-        eaction = self.move_eye(dx,dy)
+ 
+        eaction = self.move_eye()
   
         _t = time.time()
         self.actions.clear()
@@ -158,9 +153,6 @@ class ICUUser(ICUMind):
         x, y, w, h = self.task_positions[task]
         x1,x2,y1,y2 = x-w/2,x+w/2,y-h/2,y+h/2
         return self.eye_position[0] >= x1 and self.eye_position[0] <= x2 and self.eye_position[1] >= y1 and self.eye_position[1] <= y2
-
-
-        pass #print(self.task_positions)
 
     def handle_system(self, actions):
         # handle scales
@@ -194,10 +186,28 @@ class ICUUser(ICUMind):
             if self.tank_acceptable(tank) < 0: # too much fuel turn off the pumps to the main tank if possible
                 actions.extend([self.click(pump) for pump in pumps if self.pump_status[pump] == 0])
 
-    def move_eye(self, dx, dy):
-        #print("MOVE EYE", dx, dy)
-        self.eye_position[0] += dx
-        self.eye_position[1] += dy
+    def move_eye(self):
+        cx,cy = self.eye_position
+        tx,ty = self.eye_to
+        #dx,dy = (tx-cx) * self.eye_speed, (ty-cy) * self.eye_speed
+        dx, dy = (tx-cx), (ty-cy)
+        d = np.sqrt(dx**2 + dy**2)
+
+        if d > 0: 
+            dx, dy = dx / d, dy / d
+            dx, dy = dx * self.eye_speed, dy * self.eye_speed
+           
+            ds = np.sqrt(dx**2 + dy**2)
+
+            if ds <= d: 
+                self.eye_position[0] += dx
+                self.eye_position[1] += dy
+            else:
+                self.eye_position[0] = tx
+                self.eye_position[1] = ty
+
+            return InputAction('Overlay:0', label=LABELS.saccade, x=self.eye_position[0], y=self.eye_position[1])
+
         return InputAction('Overlay:0', label=LABELS.gaze, x=self.eye_position[0], y=self.eye_position[1])
 
     def click(self, component):

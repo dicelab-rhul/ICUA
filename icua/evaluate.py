@@ -76,7 +76,7 @@ class EvalScale:
         t = time.time()
         d = abs(self.px - self.c)
         self.cma(d, t - self.t) #time weighted average
-        print(d, t - self.t)
+        #print(d, t - self.t)
         self.t = t
         self.px = x
         return d

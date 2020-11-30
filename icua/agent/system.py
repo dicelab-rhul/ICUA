@@ -37,20 +37,18 @@ class ICUSystemMind(ICUMind):
         self.eye_position = (0,0) #gaze position of the users eyes
         
         # mirrored state of each component of the system monitoring task (updated in revise)
-        self.scale_state = copy.deepcopy({k:v for k,v in config.items() if 'Scale' in k})
-        self.warning_light_state = copy.deepcopy({k:v for k,v in config.items() if 'WarningLight' in k})
+        self.scale_state = copy.deepcopy({k:SimpleNamespace(**v, last_failed=0) for k,v in config.items() if 'Scale' in k})
+        self.warning_light_state = copy.deepcopy({k:SimpleNamespace(**v, last_failed=0) for k,v in config.items() if 'WarningLight' in k})
 
 
 
         self.highlighted = defaultdict(lambda: False) # is the component highlighted?
-        self.clicked = defaultdict(lambda : 0) # TODO when was the component last clicked?
-        self.viewed = defaultdict(lambda : 0)  # when was the component last viewed?
         self.last_viewed = 0 # when was this task last viewed? (never)
 
-
         # control variables
-        self.scale_threshold = 2 # when should a warning be generated for a scale?
-        self.grace_period = 3 # how long should I wait before giving the user some feedback if something is wrong
+
+        self.grace_period = 2
+        self.grace_period_look = 2
 
         self.time = time.time()
         self.num_percepts = 0
@@ -61,7 +59,7 @@ class ICUSystemMind(ICUMind):
         self.num_percepts += len(perceptions)
         _time = time.time()
         if _time - self.time >= 1: #after 1 second
-            print("{0:4f}-{1:4f}: {2}".format(self.time, _time, self.num_percepts))
+            #print("{0:4f}-{1:4f}: {2}".format(self.time, _time, self.num_percepts))
             self.time = _time
             self.num_percepts = 0
 
@@ -86,10 +84,21 @@ class ICUSystemMind(ICUMind):
 
     # these rules mirror the icu system logic for updating the component states
     def revise_warning_light(self, percept):
-        self.warning_light_state[percept.src]['state'] = percept.data.value
+        self.warning_light_state[percept.src].state = percept.data.value
+        if percept.data.value == int(percept.src.split(":")[1]): # if the light is in a bad state
+            self.warning_light_state[percept.src].last_failed = percept.timestamp
 
     def revise_scale(self, percept):
-        self.scale_state[percept.src]['position'] = percept.data.value
+        state = self.scale_state[percept.src] 
+        was_acceptable = abs(state.position - (state.size // 2)) == 0
+
+        self.scale_state[percept.src].position = percept.data.value
+        state = self.scale_state[percept.src] 
+        
+        if was_acceptable:
+            in_range = abs(state.position - (state.size // 2))
+            if in_range > 0: # scale is in a bad position, it failed
+                self.scale_state[percept.src].last_failed = percept.timestamp
 
     def others_highlighted(self): # are there currently any highlights?
         return any(self.highlighted.values())
@@ -100,8 +109,10 @@ class ICUSystemMind(ICUMind):
         actions = []
 
         if not self.is_looking(): #the user is not looking at the task
-            if time.time() - self.last_viewed > self.grace_period: # wait until the grace period is up before displaying any warnings
-                if not any(self.highlighted.values()): # if nothing else is already highlighted
+            if not any(self.highlighted.values()): # if nothing else is already highlighted
+
+                if time.time() - self.last_viewed > self.grace_period_look: # wait until the grace period is up before displaying any warnings
+                
                     for scale, state in self.scale_state.items():
                         actions.append(self.highlight_scale(scale, state))
 
@@ -120,24 +131,32 @@ class ICUSystemMind(ICUMind):
         return actions
     
     def highlight_scale(self, scale, state):
-        in_range = abs(state['position'] - (state['size'] // 2)) < self.scale_threshold
-        print(in_range)
-        if not self.is_highlighted(scale) and not in_range: # if the scales are more than the threshold number of slots away then highlight
+        in_range = abs(state.position - (state.size // 2)) == 0
+        
+        #asd sad
+
+        #print(in_range, abs(state.position - (state.size // 2)), self.scale_threshold)
+        if not self.is_highlighted(scale) and not in_range and time.time() - state.last_failed > self.grace_period: # if the scales are more than the threshold number of slots away then highlight
+            #print("HIGHLIGHT ", scale, self.last_viewed, time.time() - state.last_failed, self.grace_period)
             return self.highlight_action(scale, value=True)
 
     def unhighlight_scale(self, scale, state):
-        in_range = abs(state['position'] - (state['size'] // 2)) < self.scale_threshold
+        in_range = abs(state.position - (state.size // 2)) == 0
         if self.is_highlighted(scale) and in_range: #unhighlight if highlighted and in the acceptable range
             return self.highlight_action(scale, value=False)
 
     def highlight_warning_light(self, warning_light, desired_state):
         if not self.is_highlighted(warning_light): 
-            if self.warning_light_state[warning_light]['state'] != desired_state: # the light is is a bad state, highlight it!
+            state = self.warning_light_state[warning_light].state
+            last_failed = self.warning_light_state[warning_light].last_failed
+
+            if state != desired_state and time.time() - last_failed > self.grace_period: # the light is in a bad state for too long, highlight it!
+                #print("HIGHLIGHT ", warning_light, time.time() - last_failed, self.grace_period)
                 return self.highlight_action(warning_light, value=True)
 
     def unhighlight_warning_light(self, warning_light, desired_state):
         if self.is_highlighted(warning_light): 
-            if self.warning_light_state[warning_light]['state'] == desired_state: # the light is highlighted but in a good state, unhighlight it!
+            if self.warning_light_state[warning_light].state == desired_state: # the light is highlighted but in a good state, unhighlight it!
                 return self.highlight_action(warning_light, value=False)
 
     def is_highlighted(self, component): # is a component currently highlighted?

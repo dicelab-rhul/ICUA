@@ -1,0 +1,60 @@
+# PERFECT USER 0
+WarningLight:   0.017 0.92357 1.12881
+Scales:         0.034 0.034 0.034 0.034 0.034
+Tracking:       0.024
+Fuel:           0.073
+Highlight:      0.150
+# PERFECT USER 1
+WarningLight:   0.015 0.71597 1.02144
+Scales:         0.034 0.034 0.034 0.034 0.034
+Tracking:       0.007
+Fuel:           0.039
+Highlight:      0.085
+# PERFECT USER 2
+WarningLight:   0.016 1.01997 0.92332
+Scales:         0.034 0.034 0.034 0.034 0.034
+Tracking:       0.002
+Fuel:           0.072
+Highlight:      0.063
+# PERFECT USER 3
+WarningLight:   0.015 0.91892 0.81770
+Scales:         0.034 0.034 0.034 0.034 0.034
+Tracking:       0.002
+Fuel:           0.030
+Highlight:      0.048
+# PERFECT USER 4
+WarningLight:   0.016 1.02899 0.92156
+Scales:         0.034 0.034 0.034 0.034 0.034
+Tracking:       0.026
+Fuel:           0.030
+Highlight:      0.207
+# PERFECT USER 5
+WarningLight:   0.015 1.02192 0.82294
+Scales:         0.034 0.034 0.034 0.034 0.034
+Tracking:       0.000
+Fuel:           0.030
+Highlight:      0.033
+# PERFECT USER 6
+WarningLight:   0.015 0.92602 0.92397
+Scales:         0.034 0.034 0.034 0.034 0.034
+Tracking:       0.004
+Fuel:           0.030
+Highlight:      0.070
+# PERFECT USER 7
+WarningLight:   0.017 0.94216 1.13551
+Scales:         0.035 0.035 0.035 0.035 0.035
+Tracking:       0.012
+Fuel:           0.139
+Highlight:      0.088
+# PERFECT USER 8
+WarningLight:   0.017 0.83708 1.15146
+Scales:         0.035 0.035 0.035 0.035 0.035
+Tracking:       0.042
+Fuel:           0.031
+Highlight:      0.230
+# PERFECT USER 9
+WarningLight:   0.017 1.04536 1.04760
+Scales:         0.035 0.035 0.035 0.035 0.035
+Tracking:       0.000
+Fuel:           0.032
+Highlight:      0.040

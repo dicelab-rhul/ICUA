@@ -46,12 +46,16 @@ class ICUTrackMind(ICUMind):
         self.target_state['position'] = (0,0) #TODO update if we add a config option for position!
         
         self.highlighted = defaultdict(lambda: False) # is the component highlighted?
-        self.viewed = defaultdict(lambda : 0)  # when was the component last viewed?
         self.last_viewed = 0 # when was this task last viewed? (never)
+        self.last_failed = 0 # when did this component last fail? 
 
         # control variables
         self.distance_threshold = 50 # how far from the center can the target be? (pixels)
-        self.grace_period = 3 # how long should I wait before giving the user some feedback if something is wrong
+        
+        self.grace_period = 2 # how long should I wait before giving the user some feedback if something is wrong
+        self.grace_period_look = 2
+
+
 
     def revise(self, *perceptions):
         for perception in sorted(perceptions, key=lambda p: p.name):
@@ -67,25 +71,42 @@ class ICUTrackMind(ICUMind):
             elif perception.data.label == ICUTrackMind.LABELS.move: #the tracking target moved
                 if perception.src == self.target: #otherwise ignore it (TODO is there any nice fix in ICU? or perhaps block unwanted events down stream)
                     #print(perception.data.x, perception.data.y)
-                    self.target_state['position'] = (perception.data.x, perception.data.y)
+                    x,y = self.target_state['position']
+                    d_old = (x**2 + y**2)**0.5 
+                    self.target_state['position'] = (perception.data.x, perception.data.y) # TODO last_failed
+                    x,y = self.target_state['position']
+                    d_new = (x**2 + y**2)**0.5 
+                    if d_new > self.distance_threshold and d_old <= self.distance_threshold: # if transition from good to bad 
+                        self.last_failed = time.time()
 
             elif perception.data.label == ICUTrackMind.LABELS.highlight:
                 src = perception.src.split(':', 1)[1]
                 self.highlighted[src] = perception.data.value
 
+        
+
+
     def decide(self):
+
+        x,y = self.target_state['position']
+        d = (x**2 + y**2)**0.5 
+
         if not self.is_looking():
-            if time.time() - self.last_viewed > self.grace_period:# and not self.others_highlighted():
-                x,y = self.target_state['position']
-                d = (x**2 + y**2)**0.5 
-                
-                if not self.is_highlighted() and d > self.distance_threshold: #the target is away from the center!
-                    return self.highlight_action(self.target, value=True)
-                elif self.is_highlighted() and d < self.distance_threshold:
-                    return self.highlight_action(self.target, value=False)
+            if not any(self.highlighted.values()):
+                if time.time() - self.last_viewed > self.grace_period_look:
+                    if time.time() - self.last_failed > self.grace_period:
+                        
+                        
+                        if not self.is_highlighted() and d > self.distance_threshold: #the target is away from the center!
+                            return self.highlight_action(self.target, value=True)
+                        elif self.is_highlighted() and d < self.distance_threshold:
+                            return self.highlight_action(self.target, value=False)
         else:   
             if self.is_highlighted(): #if the user is looking and the task is highlighted, unhighlight it
                 return self.highlight_action(self.target, value=False)
+                
+        if d <= self.distance_threshold:
+            return self.highlight_action(self.target, value=False)
     
     def others_highlighted(self): # are there currently any highlights?
         return any(self.highlighted.values())

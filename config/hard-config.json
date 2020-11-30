@@ -10,8 +10,8 @@
 
     "Target:0" : { "schedule":[[100]], "step" : 10 , "invert" : false},
 
-    "FuelTank:A" : {"fuel" : 0, "burn_rate":12, "accept_position":0.5, "accept_proportion":0.1},
-    "FuelTank:B" : {"fuel" : 0, "burn_rate":12, "accept_position":0.5, "accept_proportion":0.1},
+    "FuelTank:A" : {"fuel" : 0, "burn_rate":18, "accept_position":0.5, "accept_proportion":0.1},
+    "FuelTank:B" : {"fuel" : 0, "burn_rate":18, "accept_position":0.5, "accept_proportion":0.1},
     "FuelTank:C" : {},
     "FuelTank:D" : {},
     "FuelTank:E" : {},
