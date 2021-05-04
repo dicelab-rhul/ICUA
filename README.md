@@ -58,7 +58,7 @@ python -m icua
 
 ----------------------------
 
-ICU Agents built on top of pystarworlds, an overview of the system is presented below.
+ICU Agents built on top of [pystarworlds](https://github.com/dicelab-rhul/pystarworlds/tree/master/pystarworlds), an overview of the system is presented below.
 
 <img src="docs/icua.png">
 
@@ -109,7 +109,7 @@ Each type of perception mirrors an ICU event (see TODO) for a description of eac
 ## Actions
 
 * `ICUAction` - the action that an agent takes to provide feedback to a user. Takes a similar form to an ICU event `ICUAction(dst, data)` with the source being the agent.
-* `CommunicationAction` - the action used to communicate amoung agents in the ICUA system, may be used to corrdinate feedback. 
+* `CommunicationAction` - the action used to communicate amoung agents in the ICUA system, may be used to coordinate feedback. 
 
 --------------------------
 
