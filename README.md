@@ -115,11 +115,8 @@ Each type of perception mirrors an ICU event (see TODO) for a description of eac
 
 ## Environment
 
-For details on the pystarworlds environment architecture see (TODO).
+For details on the environment architecture see (pystarworlds)[https://github.com/dicelab-rhul/pystarworlds/tree/master/pystarworld]. A key component of the environment is the ICU process (the connection to the ICU environment), outlined below.
 
 #### ICU Process 
 
-The ICU process is an environmental process - it periodically emits events which are processed by the physics. In ICUA the ICU process connects to the ICU system, receiving all of the events that ICU generates. These events are emited in the form of perceptions by the process, at which point the physics notfies all of the subcribing sensors. The process makes use of a connection to the ICU system which is also used by the physics to send events (`ICUAction`) to the ICU system. 
-
-
-
+The ICU process is an environmental process - it periodically emits events which are processed by the physics. In ICUA the ICU process is a connection to the ICU system, receiving all of the events that ICU generates. These events are emited in the form of perceptions by the process and the ICUA physics notifies all of the subcribing sensors. Actions (as events) can also be sent from the ICUA (originating from the agents) to ICU, ICU has the capacity to interpret these actions and enact changes on its state. The action events must follow the API exposed by ICU. 
