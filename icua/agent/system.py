@@ -14,7 +14,7 @@ from collections import defaultdict
 import copy
 import time
 
-from pystarworlds.Agent import new_sensor
+from pystarworlds.agent import new_sensor
 
 from .agent import ICUMind, ICUBody
 from ..perception import WarningLightPerception, ScalePerception, EyeTrackerPerception, HighlightPerception

@@ -13,7 +13,7 @@ from types import SimpleNamespace
 
 from abc import abstractmethod
 
-from pystarworlds.Agent import Body, Mind, new_actuator, new_sensor
+from pystarworlds.agent import Body, Mind, new_actuator, new_sensor
 
 from ..action import ICUAction, InputAction
 

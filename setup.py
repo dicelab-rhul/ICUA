@@ -12,14 +12,14 @@ __status__ = "Development"
 import setuptools
 
 setuptools.setup(name='icua',
-      version='0.0.1',
+      version='0.0.2',
       description='',
       url='https://github.com/dicelab-rhul/pystarworlds',
       author='Benedict Wilkins',
       author_email='brjw@hotmail.co.uk',
       license='',
       packages=setuptools.find_packages(),
-      install_requires = [ 'pystarworlds>=0.0.3', 'icu' ],
+      install_requires = [ 'pystarworlds==0.0.5', 'icu' ],
       classifiers=[
         "Programming Language :: Python :: 3",
         "Development Status :: 2 - Pre-Alpha",

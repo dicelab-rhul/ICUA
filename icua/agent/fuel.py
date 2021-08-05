@@ -15,7 +15,7 @@ import copy
 import time
 import pprint
 
-from pystarworlds.Agent import new_sensor
+from pystarworlds.agent import new_sensor
 
 from .agent import ICUMind, ICUBody
 from ..perception import FuelTankPerception, PumpPerception, EyeTrackerPerception, HighlightPerception

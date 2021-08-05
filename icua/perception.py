@@ -10,7 +10,7 @@ __email__ = "benrjw@gmail.com"
 __status__ = "Development"
 
 from icu.event import Event
-from pystarworlds.Event import Perception
+from pystarworlds.event import Perception
 
 class ICUPerception(Perception):
     """ Perception class for ICU agents, wraps an ICU event. """

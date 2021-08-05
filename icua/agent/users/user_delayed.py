@@ -17,7 +17,7 @@ import random
 import numpy as np
 from pprint import pprint
 
-from pystarworlds.Agent import new_sensor
+from pystarworlds.agent import new_sensor
 
 from ..agent import ICUMind, ICUBody
 from ...perception import WarningLightPerception, ScalePerception, TrackPerception, FuelTankPerception, PumpPerception, EyeTrackerPerception, HighlightPerception

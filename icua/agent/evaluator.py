@@ -18,7 +18,7 @@ import numpy as np
 from pprint import pprint
 
 
-from pystarworlds.Agent import new_sensor
+from pystarworlds.agent import new_sensor
 
 from ..evaluate import EvalTracking, EvalTime, EvalScale
 

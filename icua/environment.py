@@ -22,7 +22,7 @@ from threading import Thread
 
 from icu.process import PipedMemory
 
-from pystarworlds.Environment import Environment, Physics, Ambient, Process
+from pystarworlds.environment import Environment, Physics, Ambient, Process
 
 from .action import ICUAction, InputAction
 from .perception import ICUPerception, perception
@@ -75,7 +75,9 @@ class ICUEnvironment(Environment):
        
         #processes = [ICUProcessStub2()]
         processes = [ICUProcess(**kwargs)]
-        print("SHARED MEMORY")
+        self.icuprocess = processes[0]
+
+        #print("SHARED MEMORY")
         #pprint(processes[0].shared_memory().window_properties)
         #pprint(sorted(processes[0].shared_memory().event_sinks))
         #pprint(processes[0].shared_memory().event_sources)
@@ -89,27 +91,28 @@ class ICUEnvironment(Environment):
 
         agents = [agent(config, window_properties) for agent in agents]
 
-        ambient = ICUAmbient(agents)
+        ambient = ICUAmbient(agents, processes=processes)
         physics = ICUPhysics([ICUAction, InputAction])
 
 
-        super(ICUEnvironment, self).__init__(physics, ambient, processes=processes)
+        super(ICUEnvironment, self).__init__(physics, ambient)
         
     def simulate(self, *args, **kwargs):
 
-        while self.processes[0].is_alive():
-            self.evolve()
+        while self.icuprocess.is_alive():
+            self.evolveEnvironment()
             time.sleep(CYCLE_DELAY)
         
-        self.processes[0].join()
+        self.icuprocess.join()
 
+    # TODO this + ICUProcess needs to be updates to fit with pystarworlds v0.0.4!
     def evolveEnvironment(self): #TODO remove in favour of evolve
         #allow all processes to do their thing
         total_events = 0
-        for process in self.processes:
+        for process in self.ambient.processes.values():
             events = process(self)
             total_events += len(events)
-            self.execute_events(events)
+            self.physics.execute(self, events)
 
         # measure time to execute
         #start_time = time.time()
@@ -120,24 +123,15 @@ class ICUEnvironment(Environment):
 
         #print("Agents took: {0} to process {1} events.".format(time.time() - start_time, total_events))
         attempts = [action for agent in agents for actuator in agent.actuators.values() for action in actuator]
-        events = self.execute_events(attempts)
+        self.physics.execute(self, attempts)
         
+    # TODO REMOVE
     def execute_events(self, events): # this should be moved into pystarworlds
         events = self.physics.execute(self, events)
        
         if len(events) > 0:
             #print("EVENTS:", len(events))
             self.execute_events(events)
-
-
-
-        
-
-
-        
-
-
-
 
 class ICUPhysics(Physics):
     pass 

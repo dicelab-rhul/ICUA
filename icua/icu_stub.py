@@ -14,7 +14,7 @@ import time
 import random
 
 import icu
-from pystarworlds.Environment import Process
+from pystarworlds.environment import Process
 
 from .perception import perception
 

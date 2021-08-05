@@ -37,7 +37,7 @@ agents = [FuelMonitor, TrackMonitor, SystemMonitor]
 
 #agents = [User]
 #agents = [Evaluator]
-print(args)
+
 env = ICUEnvironment(*agents, **args.__dict__)
 env.simulate()
 

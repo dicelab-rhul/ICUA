@@ -12,7 +12,7 @@ __status__ = "Development"
 from types import SimpleNamespace
 import time
 
-from pystarworlds.Event import Action, Executor
+from pystarworlds.event import Action, Executor
 from .perception import ICUPerception, EyeTrackerPerception
 
 
@@ -20,7 +20,7 @@ from .perception import ICUPerception, EyeTrackerPerception
 class ICUExecutor(Executor):
 
     def __call__(self, env, action):
-        env.processes[0].sink(action.source, action.destination, action.data)
+        env.icuprocess.sink(action.source, action.destination, action.data)
 
 class ICUAction(Action):
 
