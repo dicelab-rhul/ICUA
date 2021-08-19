@@ -22,7 +22,8 @@ ICUActuator = new_actuator('ICUActuator', ICUAction, InputAction) #common across
 class ICUMind(Mind):
 
     LABELS = SimpleNamespace(switch='switch', slide='slide', click='click', highlight='highlight',
-                             gaze='gaze', saccade='saccade', move='move')
+                             gaze='gaze', saccade='saccade', move='move', rotate='rotate', show='show',
+                             hide='hide')
 
     def __init__(self):
         super(ICUMind, self).__init__()
@@ -62,9 +63,20 @@ class ICUMind(Mind):
         """
         if not dst.startswith('Highlight'):
             dst = 'Highlight:{0}'.format(dst)
-        #print("HIGHLIGHT", dst, value)
         return ICUAction(dst, label=ICUMind.LABELS.highlight, value=value)
 
+    def rotate_arrow_action(self, p1, p2):
+        # rotate the arrow to point from p1 to p2
+        
+        # compute angle
+        angle = 10
+        return ICUAction("Overlay:0", label="rotate", angle=angle)
+
+    def show_arrow_action(self, value):
+        if value:
+            return ICUAction("Overlay:0", label="show")
+        else:
+            return ICUAction("Overlay:0", label="hide")
 
 class ICUBody(Body):
 

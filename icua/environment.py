@@ -72,7 +72,6 @@ class ICUEnvironment(Environment):
     
     def __init__(self, *agents, **kwargs):
 
-       
         #processes = [ICUProcessStub2()]
         processes = [ICUProcess(**kwargs)]
         self.icuprocess = processes[0]

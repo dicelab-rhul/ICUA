@@ -39,21 +39,25 @@ class ICUSystemMind(ICUMind):
         # mirrored state of each component of the system monitoring task (updated in revise)
         self.scale_state = copy.deepcopy({k:SimpleNamespace(**v, last_failed=0) for k,v in config.items() if 'Scale' in k})
         self.warning_light_state = copy.deepcopy({k:SimpleNamespace(**v, last_failed=0) for k,v in config.items() if 'WarningLight' in k})
-
-
+       
+        self.system_panel = "SystemMonitorWidget" # TODO get this info from somewhere -- the name might change!
 
         self.highlighted = defaultdict(lambda: False) # is the component highlighted?
         self.last_viewed = 0 # when was this task last viewed? (never)
 
-        # control variables
-
-        self.grace_period = 2
-        self.grace_period_look = 2
-
         self.time = time.time()
         self.num_percepts = 0
 
+        # control variables from config TODO streamline using defaults
+        try:
+            self.grace_period = config['agent']['system']['grace_period']
+        except:
+            self.grace_period = 2
 
+        try:
+            self.highlight_all = (config['agent']['system']['highlight']) == 'all'
+        except:
+            self.highlight_all = False
 
     def revise(self, *perceptions):
         self.num_percepts += len(perceptions)
@@ -81,7 +85,6 @@ class ICUSystemMind(ICUMind):
                 elif "Scale" in percept.src:
                     self.revise_scale(percept)
 
-
     # these rules mirror the icu system logic for updating the component states
     def revise_warning_light(self, percept):
         self.warning_light_state[percept.src].state = percept.data.value
@@ -103,6 +106,21 @@ class ICUSystemMind(ICUMind):
     def others_highlighted(self): # are there currently any highlights?
         return any(self.highlighted.values())
 
+    def highlight_any(self):
+        actions = []
+        # should anything be highlighted? 
+        for scale, state in self.scale_state.items():
+            actions.append(self.highlight_scale(scale, state))
+        actions.append(self.highlight_warning_light('WarningLight:0', 1))
+        actions.append(self.highlight_warning_light('WarningLight:1', 0))
+
+        if not self.highlight_all: # only highlight the panel...
+            if len(actions) > 0: # something needs highlighting, highlight the panel
+                return  [self.highlight_action(self.system_panel, value=True)]
+                #return []
+
+        return actions
+
     def decide(self):
         # DEMO -- this requires some discussion!
 
@@ -111,13 +129,10 @@ class ICUSystemMind(ICUMind):
         if not self.is_looking(): #the user is not looking at the task
             if not any(self.highlighted.values()): # if nothing else is already highlighted
 
-                if time.time() - self.last_viewed > self.grace_period_look: # wait until the grace period is up before displaying any warnings
-                
-                    for scale, state in self.scale_state.items():
-                        actions.append(self.highlight_scale(scale, state))
-
-                    actions.append(self.highlight_warning_light('WarningLight:0', 1))
-                    actions.append(self.highlight_warning_light('WarningLight:1', 0))
+                if time.time() - self.last_viewed > self.grace_period: # wait until the grace period is up before displaying any warnings
+                    
+                    actions.extend(self.highlight_any())
+                   
                 
         else: #if the user is looking, remove all of the warnings that have been displayed
             return self.clear_highlights()
@@ -128,12 +143,13 @@ class ICUSystemMind(ICUMind):
         actions.append(self.unhighlight_warning_light('WarningLight:0', 1))
         actions.append(self.unhighlight_warning_light('WarningLight:1', 0))
 
+        rotate = self.rotate_arrow_action(self.eye_position, self.bounding_box[:2])
+        actions.append(rotate)
+
         return actions
     
     def highlight_scale(self, scale, state):
         in_range = abs(state.position - (state.size // 2)) == 0
-        
-        #asd sad
 
         #print(in_range, abs(state.position - (state.size // 2)), self.scale_threshold)
         if not self.is_highlighted(scale) and not in_range and time.time() - state.last_failed > self.grace_period: # if the scales are more than the threshold number of slots away then highlight
@@ -180,7 +196,9 @@ class ICUSystemMind(ICUMind):
         """
         actions = []
         for component, highlighted in self.highlighted.items():
-            if highlighted and (component in self.scale_state or component in self.warning_light_state): #only unhighlight components that belong to this task
+            if highlighted and (component in self.scale_state or 
+                                component in self.warning_light_state or
+                                component == self.system_panel): #only unhighlight components that belong to this task
                 actions.append(self.highlight_action(component, value=False)) #add an action to turn off the highlighted
         return actions
 

@@ -17,16 +17,9 @@ from .environment import ICUEnvironment
 from .agent import FuelMonitor, TrackMonitor, SystemMonitor, Evaluator
 from .agent.users import User, PerfectUser, DelayedUser
 
+from icu import get_parser
 
-class PathAction(argparse.Action):
-
-    def __call__(self, parser, namespace, path, option_string=None):
-        setattr(namespace, self.dest, os.path.abspath(path))
-            
-parser = argparse.ArgumentParser(description='ICU')
-
-parser.add_argument('--config', '-c', metavar='C', action=PathAction, type=str, help='path of the ICU config file to use.')
-
+parser = get_parser()
 args = parser.parse_args()
 
 agents = [FuelMonitor, TrackMonitor, SystemMonitor]
@@ -38,6 +31,6 @@ agents = [FuelMonitor, TrackMonitor, SystemMonitor]
 #agents = [User]
 #agents = [Evaluator]
 
-env = ICUEnvironment(*agents, **args.__dict__)
+env = ICUEnvironment(*agents, **args.__dict__, config_hook="icua.config")
 env.simulate()
 

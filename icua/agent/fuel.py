@@ -49,9 +49,13 @@ class ICUFuelMind(ICUMind):
         self.viewed = defaultdict(lambda : 0)  # when was the component last viewed?
         self.last_viewed = 0 # when was this task last viewed? (never)
 
-        # control variables
-        self.grace_period = 2 # how long should I wait before giving the user some feedback if something is wrong
-        self.grace_period_look = 2 # how long should I wait before giving feedback after the user has looked away from a failed task
+       
+        # control variables from config TODO streamline using defaults
+        try:
+            self.grace_period = config['agent']['fuel']['grace_period']
+        except:
+            self.grace_period = 2
+
 
     def __str__(self):
         return pprint.pformat([self.__class__.__name__ + ":" + self.ID, self.eye_position, self.bounding_box, 
@@ -94,7 +98,7 @@ class ICUFuelMind(ICUMind):
         
         if not self.is_looking(): # if the user is looking, dont highlight anything
             if not any(self.highlighted.values()): # if any other highlights are shown, dont highlight
-                if time.time() - self.last_viewed > self.grace_period_look: # if the user has not looked within the grace period
+                if time.time() - self.last_viewed > self.grace_period: # if the user has not looked within the grace period
                     
                     #print("LAST LOOKED: ", time.time() - self.last_viewed)
 

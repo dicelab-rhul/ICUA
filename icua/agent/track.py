@@ -52,10 +52,14 @@ class ICUTrackMind(ICUMind):
         # control variables
         self.distance_threshold = 50 # how far from the center can the target be? (pixels)
         
-        self.grace_period = 2 # how long should I wait before giving the user some feedback if something is wrong
-        self.grace_period_look = 2
+        #self.grace_period = 2 # how long should I wait before giving the user some feedback if something is wrong
+        #self.grace_period = 2
 
-
+        # control variables from config TODO streamline using defaults
+        try:
+            self.grace_period = config['agent']['track']['grace_period']
+        except:
+            self.grace_period = 2
 
     def revise(self, *perceptions):
         for perception in sorted(perceptions, key=lambda p: p.name):
@@ -83,9 +87,6 @@ class ICUTrackMind(ICUMind):
                 src = perception.src.split(':', 1)[1]
                 self.highlighted[src] = perception.data.value
 
-        
-
-
     def decide(self):
 
         x,y = self.target_state['position']
@@ -93,9 +94,8 @@ class ICUTrackMind(ICUMind):
 
         if not self.is_looking():
             if not any(self.highlighted.values()):
-                if time.time() - self.last_viewed > self.grace_period_look:
+                if time.time() - self.last_viewed > self.grace_period:
                     if time.time() - self.last_failed > self.grace_period:
-                        
                         
                         if not self.is_highlighted() and d > self.distance_threshold: #the target is away from the center!
                             return self.highlight_action(self.target, value=True)
@@ -105,7 +105,7 @@ class ICUTrackMind(ICUMind):
             if self.is_highlighted(): #if the user is looking and the task is highlighted, unhighlight it
                 return self.highlight_action(self.target, value=False)
                 
-        if d <= self.distance_threshold:
+        if d <= self.distance_threshold and self.is_highlighted():
             return self.highlight_action(self.target, value=False)
     
     def others_highlighted(self): # are there currently any highlights?

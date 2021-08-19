@@ -16,7 +16,6 @@ from pystarworlds.event import Action, Executor
 from .perception import ICUPerception, EyeTrackerPerception
 
 
-
 class ICUExecutor(Executor):
 
     def __call__(self, env, action):
