@@ -25,7 +25,7 @@ ICUTrackSensor = new_sensor('ICUTrackSensor', TrackPerception, EyeTrackerPercept
 
 class ICUTrackMind(ICUMind):
 
-    LABELS = SimpleNamespace(move='move',  key='key', highlight='highlight', gaze='gaze', saccade='saccade')
+    LABELS = SimpleNamespace(move='move',  key='key', highlight='highlight', gaze='gaze', saccade='saccade', rotate='rotate')
 
     def __init__(self, config, window_properties):
         super(ICUTrackMind, self).__init__()

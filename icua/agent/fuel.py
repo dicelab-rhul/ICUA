@@ -26,7 +26,8 @@ ICUFuelSensor = new_sensor('ICUFuelSensor', FuelTankPerception, PumpPerception, 
 class ICUFuelMind(ICUMind):
 
     LABELS = SimpleNamespace(highlight='highlight', gaze='gaze', saccade='saccade', click='click',
-                                burn='burn', transfer='transfer', change="change", fuel='fuel', repair='repair', fail='fail')
+                                burn='burn', transfer='transfer', change="change", fuel='fuel', 
+                                repair='repair', fail='fail', rotate='rotate')
 
     def __init__(self, config, window_properties):
         super(ICUFuelMind, self).__init__()

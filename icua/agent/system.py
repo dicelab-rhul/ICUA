@@ -25,7 +25,7 @@ ICUSystemSensor = new_sensor('ICUSystemSensor', WarningLightPerception, ScalePer
 class ICUSystemMind(ICUMind):
 
     LABELS = SimpleNamespace(switch='switch', slide='slide', click='click', highlight='highlight',
-                             gaze='gaze', saccade='saccade', change='change')
+                             gaze='gaze', saccade='saccade', change='change', rotate='rotate')
 
     def __init__(self, config, window_properties):
         super(ICUSystemMind, self).__init__()
@@ -143,8 +143,8 @@ class ICUSystemMind(ICUMind):
         actions.append(self.unhighlight_warning_light('WarningLight:0', 1))
         actions.append(self.unhighlight_warning_light('WarningLight:1', 0))
 
-        rotate = self.rotate_arrow_action(self.eye_position, self.bounding_box[:2])
-        actions.append(rotate)
+        #rotate = self.rotate_arrow_action(self.eye_position, self.bounding_box[:2])
+        #actions.append(rotate)
 
         return actions
     
