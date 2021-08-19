@@ -7,7 +7,8 @@ options_system_ag = dict(
     highlight = Option('system', is_type(str))
 )
 options_fuel_ag = dict(
-    grace_period = Option('fuel', is_type(int, float))
+    grace_period = Option('fuel', is_type(int, float)),
+    highlight = Option('fuel', is_type(str))
 )
 options_track_ag = dict(
     grace_period = Option('track', is_type(int, float))

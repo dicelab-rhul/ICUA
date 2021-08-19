@@ -40,7 +40,7 @@ class ICUSystemMind(ICUMind):
         self.scale_state = copy.deepcopy({k:SimpleNamespace(**v, last_failed=0) for k,v in config.items() if 'Scale' in k})
         self.warning_light_state = copy.deepcopy({k:SimpleNamespace(**v, last_failed=0) for k,v in config.items() if 'WarningLight' in k})
        
-        self.system_panel = "SystemMonitorWidget" # TODO get this info from somewhere -- the name might change!
+        self.system_panel = "SystemMonitor" # TODO get this info from somewhere -- the name might change!
 
         self.highlighted = defaultdict(lambda: False) # is the component highlighted?
         self.last_viewed = 0 # when was this task last viewed? (never)

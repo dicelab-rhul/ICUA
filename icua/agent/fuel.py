@@ -43,6 +43,8 @@ class ICUFuelMind(ICUMind):
         self.components.remove('size')
         self.components.remove('position')
 
+        self.fuel_panel = "FuelMonitor" # TODO get this from somewhere in case it changes in future versions!
+
         self.pump_status = {pump:1 for pump in self.components if "Pump" in pump} # "ready" by default
         self.tank_status = {tank:SimpleNamespace(acceptable = self.config[tank]["fuel"], last_failed=0) for tank in self.components if "Tank" in tank}
         
@@ -56,6 +58,11 @@ class ICUFuelMind(ICUMind):
             self.grace_period = config['agent']['fuel']['grace_period']
         except:
             self.grace_period = 2
+
+        try:
+            self.highlight_all = (config['agent']['system']['highlight']) == 'all'
+        except:
+            self.highlight_all = False
 
 
     def __str__(self):
@@ -94,21 +101,30 @@ class ICUFuelMind(ICUMind):
                 src = percept.src.split(':', 1)[1]
                 self.highlighted[src] = percept.data.value
 
+
+    def highlight_any(self):
+        actions = []
+        # if the main tanks are not at an acceptable level, highlight them!
+        if not self.tank_status['FuelTank:A'].acceptable and time.time() - self.tank_status['FuelTank:A'].last_failed > self.grace_period:
+            actions.append(self.highlight_action('FuelTank:A'))
+        if not self.tank_status['FuelTank:B'].acceptable and time.time() - self.tank_status['FuelTank:B'].last_failed > self.grace_period:
+            actions.append(self.highlight_action('FuelTank:B'))
+
+        if not self.highlight_all: # only highlight the panel...
+            if len(actions) > 0: # something needs highlighting, highlight the panel
+                return  [self.highlight_action(self.fuel_panel, value=True)]
+                #return []
+
+        return actions
+
     def decide(self):
         actions = []
-        
         if not self.is_looking(): # if the user is looking, dont highlight anything
             if not any(self.highlighted.values()): # if any other highlights are shown, dont highlight
                 if time.time() - self.last_viewed > self.grace_period: # if the user has not looked within the grace period
-                    
                     #print("LAST LOOKED: ", time.time() - self.last_viewed)
-
-                    # if the main tanks are not at an acceptable level, highlight them!
-                    if not self.tank_status['FuelTank:A'].acceptable and time.time() - self.tank_status['FuelTank:A'].last_failed > self.grace_period:
-                        actions.append(self.highlight_action('FuelTank:A'))
-                
-                    if not self.tank_status['FuelTank:B'].acceptable and time.time() - self.tank_status['FuelTank:B'].last_failed > self.grace_period:
-                        actions.append(self.highlight_action('FuelTank:B'))
+                    actions.extend(self.highlight_any())
+                   
 
             #remove the highlight if its not needed
             if self.is_highlighted('FuelTank:A') and self.tank_status['FuelTank:A'].acceptable:
@@ -132,7 +148,7 @@ class ICUFuelMind(ICUMind):
         """
         actions = []
         for component, highlighted in self.highlighted.items():
-            if highlighted and (component in self.pump_status or component in self.tank_status): #only unhighlight components that belong to this task
+            if highlighted and (component in self.pump_status or component in self.tank_status or component == self.fuel_panel): #only unhighlight components that belong to this task
                 actions.append(self.highlight_action(component, value=False)) #add an action to turn off the highlight
         return actions
 
