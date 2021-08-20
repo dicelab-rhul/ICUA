@@ -60,7 +60,7 @@ class ICUFuelMind(ICUMind):
             self.grace_period = 2
 
         try:
-            self.highlight_all = (config['agent']['system']['highlight']) == 'all'
+            self.highlight_all = (config['agent']['fuel']['highlight']) == 'all'
         except:
             self.highlight_all = False
 
@@ -109,7 +109,8 @@ class ICUFuelMind(ICUMind):
             actions.append(self.highlight_action('FuelTank:A'))
         if not self.tank_status['FuelTank:B'].acceptable and time.time() - self.tank_status['FuelTank:B'].last_failed > self.grace_period:
             actions.append(self.highlight_action('FuelTank:B'))
-
+        actions = [a for a in actions if a is not None] # remove all None actions
+        
         if not self.highlight_all: # only highlight the panel...
             if len(actions) > 0: # something needs highlighting, highlight the panel
                 return  [self.highlight_action(self.fuel_panel, value=True)]
@@ -132,6 +133,11 @@ class ICUFuelMind(ICUMind):
             
             if self.is_highlighted('FuelTank:B') and self.tank_status['FuelTank:B'].acceptable:
                 actions.append(self.highlight_action('FuelTank:B', value=False))
+
+            if self.is_highlighted(self.fuel_panel) and \
+                 self.tank_status['FuelTank:A'].acceptable and \
+                 self.tank_status['FuelTank:B'].acceptable:
+                 actions.append(self.highlight_action(self.fuel_panel, value=False))
 
             return actions
         else:   
@@ -159,6 +165,7 @@ class ICUFuelMind(ICUMind):
     def is_looking(self): #is the user looking at the system monitoring task?
         ex, ey = self.eye_position
         x1, y1, x2, y2 = self.bounding_box
+        #print(self.eye_position, self.bounding_box)
         return not (ex < x1 or ey < y1 or ex > x2 or ey > y2)
 
 class ICUFuelBody(ICUBody):

@@ -113,7 +113,8 @@ class ICUSystemMind(ICUMind):
             actions.append(self.highlight_scale(scale, state))
         actions.append(self.highlight_warning_light('WarningLight:0', 1))
         actions.append(self.highlight_warning_light('WarningLight:1', 0))
-
+        actions = [a for a in actions if a is not None] # remove all None actions
+        
         if not self.highlight_all: # only highlight the panel...
             if len(actions) > 0: # something needs highlighting, highlight the panel
                 return  [self.highlight_action(self.system_panel, value=True)]
@@ -128,12 +129,9 @@ class ICUSystemMind(ICUMind):
 
         if not self.is_looking(): #the user is not looking at the task
             if not any(self.highlighted.values()): # if nothing else is already highlighted
-
                 if time.time() - self.last_viewed > self.grace_period: # wait until the grace period is up before displaying any warnings
-                    
                     actions.extend(self.highlight_any())
                    
-                
         else: #if the user is looking, remove all of the warnings that have been displayed
             return self.clear_highlights()
         
@@ -142,15 +140,24 @@ class ICUSystemMind(ICUMind):
             actions.append(self.unhighlight_scale(scale, state))
         actions.append(self.unhighlight_warning_light('WarningLight:0', 1))
         actions.append(self.unhighlight_warning_light('WarningLight:1', 0))
-
+        actions.append(self.unhighlight_panel())
         #rotate = self.rotate_arrow_action(self.eye_position, self.bounding_box[:2])
         #actions.append(rotate)
 
         return actions
     
+    def unhighlight_panel(self):
+        if self.is_highlighted(self.system_panel):
+            unhighlight = True
+            for scale, state in self.scale_state.items():
+                unhighlight = unhighlight and abs(state.position - (state.size // 2)) == 0
+            unhighlight = unhighlight and self.warning_light_state['WarningLight:0'].state == 1
+            unhighlight = unhighlight and self.warning_light_state['WarningLight:1'].state == 0
+            if unhighlight:
+                self.highlight_action(self.system_panel, value=False)
+
     def highlight_scale(self, scale, state):
         in_range = abs(state.position - (state.size // 2)) == 0
-
         #print(in_range, abs(state.position - (state.size // 2)), self.scale_threshold)
         if not self.is_highlighted(scale) and not in_range and time.time() - state.last_failed > self.grace_period: # if the scales are more than the threshold number of slots away then highlight
             #print("HIGHLIGHT ", scale, self.last_viewed, time.time() - state.last_failed, self.grace_period)
