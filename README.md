@@ -1,3 +1,12 @@
+------------------------------
+### Latest
+
+- 🆕 A new version of ICUA has been released, see: [GitHub](https://github.com/dicelab-rhul/icua2)
+
+⚠️ This repository is no longer maintained ⚠️ 
+
+------------------------------
+
 # Integrated Cognitive User assistance + Agents
 
 ## Install Instructions
